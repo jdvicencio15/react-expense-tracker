@@ -336,8 +336,8 @@ function CreditCardManagement() {
 
                      <div className="mt-4">
                         <div className="flex justify-between text-sm mb-2">
-                          <span>Usage</span>
-                          <span className="font-semibold">
+                          <span className="font-semibold text-gray-800 dark:text-gray-200" >Usage</span>
+                          <span className="font-semibold text-gray-800 dark:text-gray-200">
                            {Math.round(usagePercentage)}%
                           </span>
                         </div>
