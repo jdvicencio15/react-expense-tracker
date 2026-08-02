@@ -2,6 +2,15 @@
 import { createContext, useState, useEffect } from "react";
 import formatMonthYear from "../utils/formatMonthYear";
 import formatDate from "../utils/formatDate";
+import {
+  getExpenses,
+  addExpense as apiAddExpense,
+  deleteExpense as apiDeleteExpense,
+  updateExpense as apiUpdateExpense
+} from "../api/expenseApi";
+
+
+
 
 const ExpenseContext = createContext();
 
@@ -10,57 +19,63 @@ export function ExpenseProvider({ children }) {
     const [expenses, setExpenses] = useState([]);
 
 
-      const [isLoaded, setIsLoaded] = useState(false);
+
 
 const [monthFilter, setMonthFilter] = useState("All Months");
     const [searchTerm, setSearchTerm] = useState("");
 
 
-  useEffect(() => {
-
-    const savedExpenses = localStorage.getItem("expenses");
-
-    if (savedExpenses) {
-      setExpenses(JSON.parse(savedExpenses));
+  async function fetchExpenses() {
+    try {
+        const data = await getExpenses();
+        setExpenses(data);
+    } catch (error) {
+        console.error(error);
     }
+}
 
-    setIsLoaded(true);
-
-  }, []);
-
-
-  useEffect(() => {
-
-    if (isLoaded) {
-      localStorage.setItem(
-        "expenses",
-        JSON.stringify(expenses)
-      );
-    }
-
-  }, [expenses, isLoaded]);
-
-    function addExpense(expense) {
-        setExpenses((prev) => [...prev, expense]);
-    }
+useEffect(() => {
+    fetchExpenses();
+}, []);
 
 
-    function deleteExpense(id) {
-        setExpenses((prev) =>
-            prev.filter((expense) => expense.id !== id)
-        );
-    }
 
 
-    function updateExpense(updatedExpense) {
-        setExpenses((prev) =>
-            prev.map((expense) =>
-                expense.id === updatedExpense.id
-                    ? updatedExpense
-                    : expense
-            )
-        );
-    }
+ async function addExpense(expense) {
+
+    const savedExpense = await apiAddExpense(expense);
+
+    setExpenses((prev) => [
+        ...prev,
+        savedExpense
+    ]);
+}
+
+async function deleteExpense(id) {
+
+    await apiDeleteExpense(id);
+
+    setExpenses((prev) =>
+        prev.filter((expense) => expense._id !== id)
+    );
+}
+
+
+async function updateExpense(updatedExpense) {
+
+    const savedExpense = await apiUpdateExpense(
+        updatedExpense._id,
+        updatedExpense
+    );
+
+    setExpenses((prev) =>
+        prev.map((expense) =>
+            expense._id === savedExpense._id
+                ? savedExpense
+                : expense
+        )
+    );
+}
 
     const selectedMonth = monthFilter;
 const search = searchTerm.trim().toLowerCase();

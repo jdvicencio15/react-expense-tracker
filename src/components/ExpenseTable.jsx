@@ -4,16 +4,25 @@ import formatDate from "../utils/formatDate";
 import useExpenses from "../hooks/useExpenses";
 import { useState, useEffect } from "react";
 
-function ExpenseTable({ setEditingExpense }) {
-  const {
-    filteredExpenses,
-    monthFilter,
-    setMonthFilter,
-    searchTerm,
-    setSearchTerm,
-    deleteExpense,
-    uniqueMonths,
-  } = useExpenses();
+function ExpenseTable({
+
+  setEditingExpense
+}) {
+
+
+
+ const {
+  expenses,
+  filteredExpenses,
+  monthFilter,
+  setMonthFilter,
+  searchTerm,
+  setSearchTerm,
+  deleteExpense,
+  uniqueMonths,
+} = useExpenses();
+
+
 
   const hasExpenses = filteredExpenses.length > 0;
 
@@ -76,6 +85,11 @@ const endItem = Math.min(
   const goToNextPage = () => {
     setCurrentPage((page) => page + 1);
   };
+
+  console.log("expenses:", expenses);
+console.log("filteredExpenses:", filteredExpenses);
+console.log("currentExpenses:", currentExpenses);
+
 
   return (
     <section className="max-w-7xl mx-auto mt-8">
@@ -242,7 +256,7 @@ transition
 
                         <button
                           type="button"
-                          onClick={() => deleteExpense(expense.id)}
+                          onClick={() => deleteExpense(expense._id)}
                           className="px-3 py-1 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition"
                         >
                           🗑 Delete

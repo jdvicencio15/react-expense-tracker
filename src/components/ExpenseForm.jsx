@@ -43,7 +43,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
       setExpenseAmount(editingExpense.amount);
       setExpenseCategory(editingExpense.category);
       setExpensePaymentMethod(editingExpense.paymentMethod);
-      setExpenseDate(editingExpense.date);
+     setExpenseDate(editingExpense.date.split("T")[0]);
     }
   }, [editingExpense]);
 
@@ -79,12 +79,11 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
     }
 
     const expense = {
-      id: Date.now(),
-      name: expenseName,
-      amount: Number(expenseAmount),
-      category: expenseCategory,
-      paymentMethod: expensePaymentMethod,
-      date: expenseDate,
+     name: expenseName,
+  amount: Number(expenseAmount),
+  category: expenseCategory,
+  paymentMethod: expensePaymentMethod,
+  date: expenseDate,
     };
 
     addExpenseContext(expense);
@@ -116,7 +115,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
 
   function handleUpdateExpense() {
     const updatedExpense = {
-      id: editingExpense.id,
+       _id: editingExpense._id,
       name: expenseName,
       amount: Number(expenseAmount),
       category: expenseCategory,

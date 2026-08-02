@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 
+
+
 import Header from "./components/Header";
 import BudgetSetup from "./components/BudgetSetup";
 import CreditCardManagement from "./components/CreditCardManagement";
@@ -16,11 +18,14 @@ import ExpenseChart from "./components/ExpenseChart";
 function App() {
   const [budget, setBudget] = useState(0);
 
-  const [expenses, setExpenses] = useState([]);
+
 
   const [editingExpense, setEditingExpense] = useState(null);
 
   const [darkMode, setDarkMode] = useState(false);
+
+
+
 
   useEffect(() => {
     const savedBudget = localStorage.getItem("budget");
@@ -31,7 +36,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("Dark Mode:", darkMode);
 
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -39,7 +43,6 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
 
-    console.log(document.documentElement.className);
   }, [darkMode]);
 
   return (
@@ -50,13 +53,15 @@ function App() {
         <main className="max-w-7xl mx-auto px-4 py-8 lg:px-6 space-y-8">
           <BudgetSetup budget={budget} setBudget={setBudget} />
 
-          <Dashboard budget={budget} />
+          <Dashboard
+  budget={budget}
+/>
 
-          <ExpenseChart />
+         <ExpenseChart  />
 
           <div className="grid grid-cols-1 xl:grid-cols-5 gap-8 items-start">
             <div className="xl:col-span-2">
-             <ExpenseForm
+         <ExpenseForm
   editingExpense={editingExpense}
   setEditingExpense={setEditingExpense}
 />
@@ -67,9 +72,11 @@ function App() {
             </div>
           </div>
 
-          <CategorySummary expenses={expenses} />
+          <CategorySummary  />
 
-          <ExpenseTable setEditingExpense={setEditingExpense} />
+          <ExpenseTable
+  setEditingExpense={setEditingExpense}
+/>
         </main>
       </div>
     </>
