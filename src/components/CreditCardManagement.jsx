@@ -11,134 +11,270 @@ import {
 import Swal from "sweetalert2";
 
 import { useState, useContext } from "react";
+
 import formatCurrency from "../utils/formatCurrency";
+
 import CreditCardContext from "../context/CreditCardContext";
 import ExpenseContext from "../context/ExpenseContext";
 
-const days = [];
 
-for (let i = 1; i <= 31; i++) {
-  days.push(i);
-}
+
+// Generate due day options (1-31)
+const days = Array.from(
+  { length: 31 },
+  (_, index) => index + 1
+);
+
+
 
 function CreditCardManagement() {
+
+
+  // Get expenses for credit card usage calculation
   const { expenses } = useContext(ExpenseContext);
 
-  const { creditCards, addCreditCard, deleteCreditCard, updateCreditCard } =
-    useContext(CreditCardContext);
 
-  const [creditcardName, setcreditcardName] = useState("");
-  const [creditcardLimit, setcreditcardLimit] = useState("");
-  const [creditcardDueDay, setcreditcardDueDay] = useState("");
 
+  // Get credit card CRUD functions
+  const {
+    creditCards,
+    addCreditCard,
+    deleteCreditCard,
+    updateCreditCard,
+  } = useContext(CreditCardContext);
+
+
+
+
+  // Form states
+  const [creditCardName, setCreditCardName] = useState("");
+  const [creditCardLimit, setCreditCardLimit] = useState("");
+  const [creditCardDueDay, setCreditCardDueDay] = useState("");
+
+
+
+  // Track selected card for editing
   const [editingCreditCard, setEditingCreditCard] = useState(null);
 
+
+
+
+
+  // Clear form inputs
   function resetForm() {
-    setcreditcardName("");
-    setcreditcardLimit("");
-    setcreditcardDueDay("");
+
+    setCreditCardName("");
+    setCreditCardLimit("");
+    setCreditCardDueDay("");
+
   }
 
+
+
+
+
+  // Load selected card data into form
   function handleEditCreditCard(id) {
-    const card = creditCards.find((card) => card._id === id);
+
+
+    const card = creditCards.find(
+      (card) => card._id === id
+    );
+
+
     if (!card) {
       return;
     }
 
-    setcreditcardName(card.cardName);
-    setcreditcardLimit(card.creditLimit);
-    setcreditcardDueDay(card.dueDay);
+
+    setCreditCardName(card.cardName);
+    setCreditCardLimit(card.creditLimit);
+    setCreditCardDueDay(card.dueDay);
+
     setEditingCreditCard(card._id);
+
   }
 
-  function checkInputs() {
-    if (creditcardName === "") {
+
+
+
+
+  // Validate form inputs
+  function validateInputs() {
+
+
+    if (!creditCardName.trim()) {
+
       alert("Please enter credit card name");
 
-      return;
-    }
-    if (creditcardLimit <= 0) {
-      alert("Credit Limit must be greater than 0");
-      return;
+      return false;
+
     }
 
-    if (creditcardDueDay === "") {
-      alert("Please select Due Day");
-      return;
+
+    if (Number(creditCardLimit) <= 0) {
+
+      alert("Credit Limit must be greater than 0");
+
+      return false;
+
     }
+
+
+    if (!creditCardDueDay) {
+
+      alert("Please select Due Day");
+
+      return false;
+
+    }
+
 
     return true;
+
   }
 
-  function creditCardSaveButton() {
-    if (!checkInputs()) {
+
+
+
+
+  // Save or update credit card
+  async function handleSaveCreditCard() {
+
+
+    if (!validateInputs()) {
       return;
     }
 
-    if (editingCreditCard !== null) {
+
+
+
+    if (editingCreditCard) {
+
+
       const updatedCard = {
+
         _id: editingCreditCard,
-        cardName: creditcardName,
-        creditLimit: Number(creditcardLimit),
-        dueDay: Number(creditcardDueDay),
+
+        cardName: creditCardName,
+
+        creditLimit: Number(creditCardLimit),
+
+        dueDay: Number(creditCardDueDay),
+
       };
 
-      updateCreditCard(updatedCard);
 
-      setEditingCreditCard(null);
-      resetForm();
+
+      await updateCreditCard(updatedCard);
+
+
+
     } else {
-      const creditCard = {
-        cardName: creditcardName,
-        creditLimit: Number(creditcardLimit),
-        dueDay: Number(creditcardDueDay),
+
+
+
+      const newCard = {
+
+        cardName: creditCardName,
+
+        creditLimit: Number(creditCardLimit),
+
+        dueDay: Number(creditCardDueDay),
+
       };
 
-      addCreditCard(creditCard);
 
-      resetForm();
+
+      await addCreditCard(newCard);
+
     }
+
+
+
+    setEditingCreditCard(null);
+
+    resetForm();
+
   }
 
+
+
+
+
+  // Calculate total expense used by a card
   function getCardUsed(cardName) {
+
+
     const cardExpenses = expenses.filter(
-      (expense) => expense.paymentMethod === cardName,
+      (expense) =>
+        expense.paymentMethod === cardName
     );
 
-    const totalUsed = cardExpenses.reduce(
-      (total, expense) => total + Number(expense.amount),
-      0,
+
+
+    return cardExpenses.reduce(
+      (total, expense) =>
+        total + Number(expense.amount),
+      0
     );
 
-    return totalUsed;
   }
 
+
+
+
+
+  // Delete credit card with confirmation
   async function handleDeleteCreditCard(id) {
-  const result = await Swal.fire({
-    title: "Delete Credit Card?",
-    text: "This action cannot be undone.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#dc2626",
-    cancelButtonColor: "#6b7280",
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-  });
 
-  if (result.isConfirmed) {
-    await deleteCreditCard(id);
 
-    Swal.fire({
-      icon: "success",
-      title: "Deleted!",
-      text: "Credit Card has been deleted.",
-      timer: 1500,
-      showConfirmButton: false,
+    const result = await Swal.fire({
+
+      title: "Delete Credit Card?",
+
+      text: "This action cannot be undone.",
+
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonColor: "#dc2626",
+
+      cancelButtonColor: "#6b7280",
+
+      confirmButtonText: "Yes, delete it!",
+
+      cancelButtonText: "Cancel",
+
     });
-  }
-  }
 
 
+
+    if (result.isConfirmed) {
+
+
+      await deleteCreditCard(id);
+
+
+
+      Swal.fire({
+
+        icon: "success",
+
+        title: "Deleted!",
+
+        text: "Credit Card has been deleted.",
+
+        timer: 1500,
+
+        showConfirmButton: false,
+
+      });
+
+    }
+
+  }
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -170,7 +306,7 @@ function CreditCardManagement() {
                 <input
                   type="text"
                   placeholder="Enter card name"
-                  value={creditcardName}
+                  value={creditCardName}
                   onChange={(e) => setcreditcardName(e.target.value)}
                   className="
             w-full
@@ -201,8 +337,8 @@ function CreditCardManagement() {
                 <input
                   type="number"
                   placeholder="Enter credit limit"
-                  value={creditcardLimit}
-                  onChange={(e) => setcreditcardLimit(e.target.value)}
+                  value={creditCardLimit}
+                  onChange={(e) => setCreditCardLimit(e.target.value)}
                   className="
             w-full
             rounded-lg
@@ -230,8 +366,8 @@ function CreditCardManagement() {
                 </label>
 
                 <select
-                  value={creditcardDueDay}
-                  onChange={(e) => setcreditcardDueDay(e.target.value)}
+                  value={creditCardDueDay}
+                  onChange={(e) => setCreditCardDueDay(e.target.value)}
                   className="
             w-full
             rounded-lg
@@ -261,7 +397,7 @@ function CreditCardManagement() {
 
               <button
                 type="button"
-                onClick={creditCardSaveButton}
+                  onClick={handleSaveCreditCard}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition flex justify-center items-center gap-2"
               >
                 {editingCreditCard ? (
@@ -346,8 +482,6 @@ function CreditCardManagement() {
                         {card.dueDay}
                       </p>
 
-
-
                       <p className="text-gray-700 dark:text-gray-300">
                         <span className="font-semibold">Used:</span>
                         <br />
@@ -361,23 +495,25 @@ function CreditCardManagement() {
                       </p>
                     </div>
 
-                     <div className="mt-4">
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-semibold text-gray-800 dark:text-gray-200" >Usage</span>
-                          <span className="font-semibold text-gray-800 dark:text-gray-200">
-                           {Math.round(usagePercentage)}%
-                          </span>
-                        </div>
-
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                          <div
-                            className={`${usageColor} h-3 rounded-full transition-all duration-500`}
-                            style={{
-                              width: `${Math.min(usagePercentage, 100)}%`,
-                            }}
-                          ></div>
-                        </div>
+                    <div className="mt-4">
+                      <div className="flex justify-between text-sm mb-2">
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">
+                          Usage
+                        </span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">
+                          {Math.round(usagePercentage)}%
+                        </span>
                       </div>
+
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                        <div
+                          className={`${usageColor} h-3 rounded-full transition-all duration-500`}
+                          style={{
+                            width: `${Math.min(usagePercentage, 100)}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
 
                     <div className="flex gap-3 mt-5">
                       <button

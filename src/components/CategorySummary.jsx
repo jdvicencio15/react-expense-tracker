@@ -1,9 +1,11 @@
 import { PieChart } from "lucide-react";
+
 import useExpenses from "../hooks/useExpenses";
 
 function CategorySummary() {
   const { filteredExpenses } = useExpenses();
 
+  // Calculate total spending per category
   const categoryTotals = filteredExpenses.reduce((acc, expense) => {
     const category = expense.category;
 
@@ -16,6 +18,7 @@ function CategorySummary() {
     return acc;
   }, {});
 
+  // Calculate total expense across all categories
   const totalCategoryExpenses = Object.values(categoryTotals).reduce(
     (total, amount) => total + amount,
     0,
@@ -23,6 +26,7 @@ function CategorySummary() {
 
   return (
     <section className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-md p-6">
+      {/* Section Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl">
           <PieChart size={24} className="text-blue-600 dark:text-blue-400" />
@@ -39,8 +43,10 @@ function CategorySummary() {
         </div>
       </div>
 
+      {/* Category List */}
       <div className="space-y-4">
         {Object.entries(categoryTotals).map(([category, amount]) => {
+          // Calculate category percentage
           const percentage =
             totalCategoryExpenses > 0
               ? Math.round((amount / totalCategoryExpenses) * 100)
@@ -67,6 +73,7 @@ function CategorySummary() {
                 </div>
               </div>
 
+              {/* Progress Bar */}
               <div className="mt-3 w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full"

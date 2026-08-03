@@ -1,57 +1,81 @@
 const API_URL = "http://localhost:5000/api/expenses";
 
+
+// Get all expenses
 export async function getExpenses() {
+
   const response = await fetch(API_URL);
 
   if (!response.ok) {
     throw new Error("Failed to fetch expenses");
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  return result.data;
 }
 
+
+// Add expense
 export async function addExpense(expense) {
+
   const response = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type":"application/json"},
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(expense),
-
   });
+
 
   if (!response.ok) {
     throw new Error("Failed to add expense");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }
 
 
+// Delete expense
 export async function deleteExpense(id) {
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
   });
+
 
   if (!response.ok) {
     throw new Error("Failed to delete expense");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }
 
 
+// Update expense
 export async function updateExpense(id, expense) {
 
   const response = await fetch(`${API_URL}/${id}`, {
-    method:"PUT",
-    headers:{
-      "Content-Type":"application/json"
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(expense)
+    body: JSON.stringify(expense),
   });
 
-  if(!response.ok){
+
+  if (!response.ok) {
     throw new Error("Failed to update expense");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }

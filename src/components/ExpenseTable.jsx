@@ -2,125 +2,183 @@ import formatCurrency from "../utils/formatCurrency";
 import formatDate from "../utils/formatDate";
 
 import useExpenses from "../hooks/useExpenses";
+
 import { useState, useEffect } from "react";
 
 import Swal from "sweetalert2";
 
-function ExpenseTable({
 
-  setEditingExpense
-}) {
+function ExpenseTable({ setEditingExpense }) {
 
+  // ===============================
+  // Expense Context Data
+  // ===============================
+  const {
+    filteredExpenses,
+    monthFilter,
+    setMonthFilter,
+    searchTerm,
+    setSearchTerm,
+    deleteExpense,
+    uniqueMonths,
+  } = useExpenses();
 
+  // Check if table has data
+const hasExpenses = filteredExpenses.length > 0;
 
- const {
-  expenses,
-  filteredExpenses,
-  monthFilter,
-  setMonthFilter,
-  searchTerm,
-  setSearchTerm,
-  deleteExpense,
-  uniqueMonths,
-} = useExpenses();
-
-
-
-  const hasExpenses = filteredExpenses.length > 0;
-
+  // ===============================
+  // Table State
+  // ===============================
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("newest");
 
-  const expensesPerPage = 5;
 
-  const totalPages = Math.ceil(filteredExpenses.length / expensesPerPage);
-const startItem = (currentPage - 1) * expensesPerPage + 1;
+  // ===============================
+  // Pagination Settings
+  // ===============================
+const expensesPerPage = 5;
+
+const totalPages = Math.ceil(
+  filteredExpenses.length / expensesPerPage
+);
+
+
+// Pagination labels
+const startItem =
+  (currentPage - 1) * expensesPerPage + 1;
 
 const endItem = Math.min(
   currentPage * expensesPerPage,
   filteredExpenses.length
-  );
+);
 
-
+  // Reset page kapag nagfilter/search
   useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages || 1);
-    }
-  }, [currentPage, totalPages]);
 
-  const sortedExpenses = [...filteredExpenses].sort((a, b) => {
-    if (sortBy === "highest") {
-      return Number(b.amount) - Number(a.amount);
-    }
-
-    if (sortBy === "lowest") {
-      return Number(a.amount) - Number(b.amount);
-    }
-
-    if (sortBy === "newest") {
-      return new Date(b.date) - new Date(a.date);
-    }
-
-    if (sortBy === "oldest") {
-      return new Date(a.date) - new Date(b.date);
-    }
-
-    return 0;
-  });
-
-  const indexOfLastExpense = currentPage * expensesPerPage;
-  const indexOfFirstExpense = indexOfLastExpense - expensesPerPage;
-
-  const currentExpenses = sortedExpenses.slice(
-    indexOfFirstExpense,
-    indexOfLastExpense,
-  );
-
-  useEffect(() => {
     setCurrentPage(1);
+
   }, [searchTerm, monthFilter]);
 
-  const goToPreviousPage = () => {
-    setCurrentPage((page) => page - 1);
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage((page) => page + 1);
-  };
-
-  console.log("expenses:", expenses);
-console.log("filteredExpenses:", filteredExpenses);
-console.log("currentExpenses:", currentExpenses);
 
 
+  // Prevent invalid page number
+  useEffect(() => {
 
-  async function handleDeleteExpense(id) {
-  const result = await Swal.fire({
-    title: "Delete Expense?",
-    text: "This action cannot be undone.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#dc2626",
-    cancelButtonColor: "#6b7280",
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-  });
+    if(currentPage > totalPages){
+      setCurrentPage(totalPages || 1);
+    }
 
-  if (result.isConfirmed) {
-    await deleteExpense(id);
+  }, [currentPage, totalPages]);
 
-    Swal.fire({
-      icon: "success",
-      title: "Deleted!",
-      text: "Expense has been deleted.",
-      timer: 1500,
-      showConfirmButton: false,
-    });
+
+
+  // ===============================
+  // Sorting Logic
+  // ===============================
+  const sortedExpenses = [...filteredExpenses].sort(
+    (a,b)=>{
+
+      switch(sortBy){
+
+        case "highest":
+          return Number(b.amount) - Number(a.amount);
+
+
+        case "lowest":
+          return Number(a.amount) - Number(b.amount);
+
+
+        case "newest":
+          return new Date(b.date) - new Date(a.date);
+
+
+        case "oldest":
+          return new Date(a.date) - new Date(b.date);
+
+
+        default:
+          return 0;
+      }
+
+    }
+  );
+
+
+
+  // ===============================
+  // Pagination Logic
+  // ===============================
+  const indexOfLastExpense =
+    currentPage * expensesPerPage;
+
+
+  const indexOfFirstExpense =
+    indexOfLastExpense - expensesPerPage;
+
+
+  const currentExpenses =
+    sortedExpenses.slice(
+      indexOfFirstExpense,
+      indexOfLastExpense
+    );
+
+
+
+  // ===============================
+  // Pagination Controls
+  // ===============================
+  function goToPreviousPage(){
+
+    setCurrentPage(
+      (page)=> page - 1
+    );
+
   }
-}
+
+
+  function goToNextPage(){
+
+    setCurrentPage(
+      (page)=> page + 1
+    );
+
+  }
 
 
 
+  // ===============================
+  // Delete Expense
+  // ===============================
+  async function handleDeleteExpense(id){
+
+    const result = await Swal.fire({
+      title:"Delete Expense?",
+      text:"This action cannot be undone.",
+      icon:"warning",
+      showCancelButton:true,
+      confirmButtonColor:"#dc2626",
+      cancelButtonColor:"#6b7280",
+      confirmButtonText:"Yes, delete it!",
+      cancelButtonText:"Cancel",
+    });
+
+
+    if(result.isConfirmed){
+
+      await deleteExpense(id);
+
+
+      Swal.fire({
+        icon:"success",
+        title:"Deleted!",
+        text:"Expense has been deleted.",
+        timer:1500,
+        showConfirmButton:false,
+      });
+
+    }
+
+  }
 
   return (
     <section className="max-w-7xl mx-auto mt-8">
@@ -287,7 +345,7 @@ transition
 
                         <button
                           type="button"
-                            onClick={() => handleDeleteExpense(expense._id)}
+                          onClick={() => handleDeleteExpense(expense._id)}
                           className="px-3 py-1 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition"
                         >
                           🗑 Delete
@@ -300,19 +358,19 @@ transition
             </tbody>
           </table>
 
-        <div
-  className="
+          <div
+            className="
     flex
     justify-center
     items-center
     gap-2
     mt-6
   "
->
-  <button
-  onClick={() => setCurrentPage((prev) => prev - 1)}
-  disabled={currentPage === 1}
-  className="
+          >
+            <button
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              disabled={currentPage === 1}
+              className="
     px-4
     py-2
     rounded-lg
@@ -325,16 +383,16 @@ transition
     disabled:opacity-50
     disabled:cursor-not-allowed
   "
->
-  Previous
-</button>
+            >
+              Previous
+            </button>
 
             <div className="flex gap-2">
               {Array.from({ length: totalPages }, (_, index) => (
                 <button
-  key={index}
-  onClick={() => setCurrentPage(index + 1)}
-  className={`
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`
     px-3 py-1 rounded-lg
     font-medium
     transition-all duration-200
@@ -351,16 +409,16 @@ transition
         `
     }
   `}
->
-  {index + 1}
-</button>
+                >
+                  {index + 1}
+                </button>
               ))}
             </div>
 
             <button
-  onClick={() => setCurrentPage((prev) => prev + 1)}
-  disabled={currentPage === totalPages}
-  className="
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={currentPage === totalPages}
+              className="
     px-4
     py-2
     rounded-lg
@@ -373,14 +431,15 @@ transition
     disabled:opacity-50
     disabled:cursor-not-allowed
   "
->
-  Next
-</button>
+            >
+              Next
+            </button>
           </div>
 
-         <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-  Showing {startItem}-{endItem}  of {filteredExpenses.length} transactions
-</div>
+          <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            Showing {startItem}-{endItem} of {filteredExpenses.length}{" "}
+            transactions
+          </div>
         </div>
       </div>
     </section>

@@ -1,27 +1,11 @@
 import useExpenses from "../hooks/useExpenses";
-import formatCurrency from "../utils/formatCurrency";
-import { useState } from "react";
 import formatDate from "../utils/formatDate";
-
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Sector,
-} from "recharts";
+import { useState } from "react";
 
 import { PieChart as PieChartIcon } from "lucide-react";
 
-const COLORS = [
-  "#3B82F6",
-  "#10B981",
-  "#F59E0B",
-  "#EF4444",
-  "#8B5CF6",
-  "#06B6D4",
-];
+import ExpensePieChart from "./charts/ExpensePieChart";
+import ExpenseLegend from "./charts/ExpenseLegend";
 
 function ExpenseChart() {
   const { filteredExpenses } = useExpenses();
@@ -54,17 +38,6 @@ function ExpenseChart() {
 
   const hasExpenses = chartData.length > 0;
 
-  function renderActiveShape(props) {
-    return (
-      <Sector
-        {...props}
-        outerRadius={props.outerRadius + 12}
-        stroke="#fff"
-        strokeWidth={3}
-      />
-    );
-  }
-
   function exportCSV() {
     const headers = ["Date", "Expense", "Category", "Payment Method", "Amount"];
 
@@ -75,6 +48,7 @@ function ExpenseChart() {
       expense.paymentMethod,
       Number(expense.amount).toFixed(2),
     ]);
+
     const csvData = [headers, ...rows];
 
     const csvContent = csvData
@@ -116,75 +90,35 @@ function ExpenseChart() {
           px-4
           py-2
           rounded-lg
-          transition-colors
-        "
+          transition
+          "
         >
           Export CSV
         </button>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 mt-6">
-        {/* LEFT - CHART */}
+        {/* LEFT - PIE CHART */}
         <div className="w-full lg:w-1/2">
           <div className="h-80">
             {hasExpenses ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-  <Pie
-    activeShape={renderActiveShape}
-    activeIndex={activeIndex}
-    onMouseEnter={(_, index) => setActiveIndex(index)}
-    onMouseLeave={() => setActiveIndex(-1)}
-    data={chartData}
-    dataKey="value"
-    nameKey="name"
-    cx="50%"
-    cy="50%"
-    outerRadius={130}
-    innerRadius={70}
-    label={({ percent }) =>
-      `${(percent * 100).toFixed(0)}%`
-    }
-  >
-    {chartData.map((entry, index) => (
-      <Cell
-        key={entry.name}
-        fill={COLORS[index % COLORS.length]}
-      />
-    ))}
-  </Pie>
-
-
-  <text
-    x="50%"
-    y="48%"
-    textAnchor="middle"
-    dominantBaseline="middle"
-    className="fill-gray-800 dark:fill-white text-lg font-bold"
-  >
-    {formatCurrency(totalExpenses)}
-  </text>
-
-
-  <text
-    x="50%"
-    y="58%"
-    textAnchor="middle"
-    dominantBaseline="middle"
-    className="fill-gray-500 dark:fill-gray-400 text-sm"
-  >
-    Total Expenses
-  </text>
-
-
-  <Tooltip
-    formatter={(value) => formatCurrency(value)}
-  />
-
-</PieChart>
-              </ResponsiveContainer>
+              <ExpensePieChart
+                chartData={chartData}
+                totalExpenses={totalExpenses}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+              />
             ) : (
-              <div className="flex h-full flex-col items-center justify-center text-center">
+              <div
+                className="
+              flex
+              h-full
+              flex-col
+              items-center
+              justify-center
+              text-center
+              "
+              >
                 <PieChartIcon
                   size={56}
                   className="text-gray-300 dark:text-gray-600"
@@ -204,51 +138,11 @@ function ExpenseChart() {
 
         {/* RIGHT - LEGEND */}
         {hasExpenses && (
-          <div className="w-full lg:w-1/2">
-            <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
-              Category Breakdown
-            </h3>
-
-            <div>
-              {chartData.map((item, index) => (
-                <div
-                  key={item.name}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onMouseLeave={() => setActiveIndex(-1)}
-                  className={`
-                  flex justify-between items-center
-                  py-3 px-2
-                  rounded-lg
-                  border-b border-gray-100 dark:border-slate-700
-                  transition-all duration-200
-
-                  ${
-                    activeIndex === index
-                      ? "bg-blue-50 dark:bg-blue-900/40 scale-[1.02]"
-                      : "hover:bg-gray-50 dark:hover:bg-slate-800"
-                  }
-                `}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor: COLORS[index % COLORS.length],
-                      }}
-                    />
-
-                    <span className="font-medium text-gray-700 dark:text-gray-200">
-                      {item.name}
-                    </span>
-                  </div>
-
-                  <span className="font-semibold text-gray-800 dark:text-white">
-                    {formatCurrency(item.value)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ExpenseLegend
+            chartData={chartData}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
         )}
       </div>
     </section>

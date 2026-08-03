@@ -1,5 +1,7 @@
 const API_URL = "http://localhost:5000/api/creditcards";
 
+
+// Get all credit cards
 export async function getCreditCards() {
   const response = await fetch(API_URL);
 
@@ -7,9 +9,13 @@ export async function getCreditCards() {
     throw new Error("Failed to fetch credit cards");
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  return result.data;
 }
 
+
+// Add credit card
 export async function addCreditCard(creditCard) {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -19,25 +25,37 @@ export async function addCreditCard(creditCard) {
     body: JSON.stringify(creditCard),
   });
 
+
   if (!response.ok) {
     throw new Error("Failed to add credit card");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }
 
+
+// Delete credit card
 export async function deleteCreditCard(id) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
   });
 
+
   if (!response.ok) {
     throw new Error("Failed to delete credit card");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }
 
+
+// Update credit card
 export async function updateCreditCard(id, creditCard) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
@@ -47,9 +65,13 @@ export async function updateCreditCard(id, creditCard) {
     body: JSON.stringify(creditCard),
   });
 
+
   if (!response.ok) {
     throw new Error("Failed to update credit card");
   }
 
-  return await response.json();
+
+  const result = await response.json();
+
+  return result.data;
 }

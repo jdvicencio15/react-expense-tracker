@@ -1,4 +1,3 @@
-
 import { createContext, useState, useEffect } from "react";
 
 import {
@@ -9,84 +8,115 @@ import {
 } from "../api/creditCardApi";
 
 
-
 const CreditCardContext = createContext();
+
 
 export function CreditCardProvider({ children }) {
 
+  // Store credit card data from backend
+  const [creditCards, setCreditCards] = useState([]);
 
-    const [creditCards, setCreditCards] = useState([]);
 
 
+  // Fetch credit cards when app loads
+  async function fetchCreditCards() {
 
-async function fetchCreditCards() {
-  try {
-    const data = await getCreditCards();
+    try {
 
-    setCreditCards(data);
-  } catch (error) {
-    console.error(error);
-  }
+      const data = await getCreditCards();
+
+      // API layer already returns actual data
+      setCreditCards(data);
+
+    } catch (error) {
+
+      console.error(
+        "Failed to fetch credit cards:",
+        error
+      );
+
+    }
   }
 
 
 
   useEffect(() => {
-  fetchCreditCards();
-}, []);
+    fetchCreditCards();
+  }, []);
 
 
 
-async function addCreditCard(card) {
 
-  const savedCard = await apiAddCreditCard(card);
+  // Add new credit card
+  async function addCreditCard(card) {
 
-  setCreditCards((prev) => [
-    ...prev,
-    savedCard
-  ]);
-}
+    const savedCard = await apiAddCreditCard(card);
 
-async function deleteCreditCard(id) {
+
+    setCreditCards((prev) => [
+      ...prev,
+      savedCard,
+    ]);
+  }
+
+
+
+
+  // Delete credit card by ID
+  async function deleteCreditCard(id) {
 
     await apiDeleteCreditCard(id);
 
-    setCreditCards((prev) =>
-        prev.filter((card) => card._id !== id)
-    );
-}
 
-async function updateCreditCard(updatedCreditCard) {
+    setCreditCards((prev) =>
+      prev.filter(
+        (card) => card._id !== id
+      )
+    );
+  }
+
+
+
+
+  // Update existing credit card
+  async function updateCreditCard(updatedCreditCard) {
 
     const savedCreditCard = await apiUpdateCreditCard(
-        updatedCreditCard._id,
-        updatedCreditCard
+      updatedCreditCard._id,
+      updatedCreditCard
     );
 
+
     setCreditCards((prev) =>
-        prev.map((card) =>
-            card._id === savedCreditCard._id
-                ? savedCreditCard
-                : card
-        )
+      prev.map((card) =>
+        card._id === savedCreditCard._id
+          ? savedCreditCard
+          : card
+      )
     );
-}
+  }
 
 
 
 
   return (
-        <CreditCardContext.Provider
-          value={{
-                creditCards,
-              addCreditCard,
-              deleteCreditCard,
-                   updateCreditCard
-            }}
-        >
-            {children}
-        </CreditCardContext.Provider>
-    );
+    <CreditCardContext.Provider
+      value={{
+        // Data
+        creditCards,
+
+
+        // CRUD operations
+        addCreditCard,
+        deleteCreditCard,
+        updateCreditCard,
+      }}
+    >
+
+      {children}
+
+    </CreditCardContext.Provider>
+  );
 }
 
 

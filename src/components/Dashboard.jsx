@@ -12,28 +12,35 @@ import formatCurrency from "../utils/formatCurrency";
 
 import useExpenses from "../hooks/useExpenses";
 
+// Payment methods considered as cash expenses
+const CASH_PAYMENT_METHODS = ["Cash", "Bank Transfer", "E-Wallet"];
+
 function Dashboard({ budget }) {
   const { filteredExpenses } = useExpenses();
 
-  const cashPaymentMethods = ["Cash", "Bank Transfer", "E-Wallet"];
+  // Check if there are expenses
   const hasExpenses = filteredExpenses.length > 0;
 
+  // Calculate total cash expenses only
   const totalExpenses = filteredExpenses.reduce((total, expense) => {
-    if (cashPaymentMethods.includes(expense.paymentMethod)) {
+    if (CASH_PAYMENT_METHODS.includes(expense.paymentMethod)) {
       return total + Number(expense.amount);
     }
 
     return total;
   }, 0);
 
+  // Remaining budget calculation
   const remainingBudget = budget - totalExpenses;
 
+  // Find highest expense
   const highestExpense = hasExpenses
     ? filteredExpenses.reduce((max, expense) => {
         return Number(expense.amount) > Number(max.amount) ? expense : max;
       }, filteredExpenses[0])
     : null;
 
+  // Find lowest expense
   const lowestExpense = hasExpenses
     ? filteredExpenses.reduce((lowest, expense) => {
         return Number(expense.amount) < Number(lowest.amount)
@@ -42,54 +49,53 @@ function Dashboard({ budget }) {
       }, filteredExpenses[0])
     : null;
 
-const summaryCards = [
-  {
-    icon: <PiggyBank size={26} className="text-blue-600" />,
-    title: "Monthly Budget",
-    amount: budget > 0 ? formatCurrency(budget) : "No Budget Set",
-    description: "Current Budget",
-  },
-  {
-    icon: <Wallet size={26} className="text-green-600" />,
-    title: "Remaining Budget",
-    amount: formatCurrency(remainingBudget),
-    description: "Available to spend",
-  },
-  {
-    icon: <Receipt size={26} className="text-red-600" />,
-    title: "Total Expenses",
-    amount: formatCurrency(totalExpenses),
-    description: "Total recorded expenses",
-  },
-  {
-    icon: <TrendingUp size={26} className="text-orange-500" />,
-    title: "Highest Expense",
-    amount: highestExpense
-      ? formatCurrency(highestExpense.amount)
-      : "No Expense",
-    description: highestExpense
-      ? highestExpense.name
-      : "No record",
-  },
-  {
-    icon: <TrendingDown size={26} className="text-blue-500" />,
-    title: "Lowest Expense",
-    amount: lowestExpense
-      ? formatCurrency(lowestExpense.amount)
-      : "No Expense",
-    description: lowestExpense
-      ? lowestExpense.name
-      : "No record",
-  },
-];
+  // Dashboard summary cards data
+  const summaryCards = [
+    {
+      icon: <PiggyBank size={26} />,
+      title: "Monthly Budget",
+      amount: budget > 0 ? formatCurrency(budget) : "No Budget Set",
+      description: "Current Budget",
+    },
 
+    {
+      icon: <Wallet size={26} />,
+      title: "Remaining Budget",
+      amount: formatCurrency(remainingBudget),
+      description: "Available to spend",
+    },
 
+    {
+      icon: <Receipt size={26} />,
+      title: "Total Expenses",
+      amount: formatCurrency(totalExpenses),
+      description: "Total recorded expenses",
+    },
+
+    {
+      icon: <TrendingUp size={26} />,
+      title: "Highest Expense",
+      amount: highestExpense
+        ? formatCurrency(highestExpense.amount)
+        : "No Expense",
+      description: highestExpense ? highestExpense.name : "No record",
+    },
+
+    {
+      icon: <TrendingDown size={26} />,
+      title: "Lowest Expense",
+      amount: lowestExpense
+        ? formatCurrency(lowestExpense.amount)
+        : "No Expense",
+      description: lowestExpense ? lowestExpense.name : "No record",
+    },
+  ];
 
   return (
-   <section className="overview-section">
-  <div className="mb-6">
-    <h2
-      className="
+    <section className="overview-section">
+      <div className="mb-6">
+        <h2
+          className="
       flex
       items-center
       gap-3
@@ -98,24 +104,21 @@ const summaryCards = [
       text-gray-800
       dark:text-white
       "
-    >
-      <LayoutDashboard
-        size={28}
-        className="text-blue-600"
-      />
-      Dashboard Overview
-    </h2>
+        >
+          <LayoutDashboard size={28} className="text-blue-600" />
+          Dashboard Overview
+        </h2>
 
-    <p
-      className="
+        <p
+          className="
       text-gray-500
       dark:text-gray-400
       mt-1
       "
-    >
-      Quick summary of your finances.
-    </p>
-  </div>
+        >
+          Quick summary of your finances.
+        </p>
+      </div>
 
       <div
         className="
@@ -126,19 +129,10 @@ const summaryCards = [
     gap-6
     "
       >
-
-
         {summaryCards.map((card) => (
-  <Card
-    key={card.title}
-    {...card}
-  />
+          <Card key={card.title} {...card} />
         ))}
-
-
       </div>
-
-
     </section>
   );
 }
