@@ -28,7 +28,7 @@ const [monthFilter, setMonthFilter] = useState("All Months");
   async function fetchExpenses() {
     try {
         const data = await getExpenses();
-        setExpenses(data);
+        setExpenses(data.data);
     } catch (error) {
         console.error(error);
     }

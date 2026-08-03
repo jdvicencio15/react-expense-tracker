@@ -4,19 +4,23 @@ const router = express.Router();
 
 const {
   getExpenses,
+  getExpenseById,
   addExpense,
-  deleteExpense,
   updateExpense,
-  getExpenseById
+  deleteExpense,
 } = require("../controllers/expenseController");
 
 
+// Expense API routes
 router.get("/", getExpenses);
+
 router.get("/:id", getExpenseById);
 
 router.post("/", addExpense);
 
-router.delete("/:id", deleteExpense);
 router.put("/:id", updateExpense);
+
+router.delete("/:id", deleteExpense);
+
 
 module.exports = router;

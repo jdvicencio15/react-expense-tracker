@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const ExpenseSchema = new mongoose.Schema(
   {
+    // Basic expense information
     name: {
       type: String,
       required: [true, "Expense name is required"],
@@ -32,6 +33,7 @@ const ExpenseSchema = new mongoose.Schema(
     },
   },
   {
+    // Automatically add createdAt and updatedAt fields
     timestamps: true,
   }
 );

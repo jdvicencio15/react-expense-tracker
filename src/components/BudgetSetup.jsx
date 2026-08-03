@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { PiggyBank } from "lucide-react";
 import { Save } from "lucide-react";
+import { saveBudget } from "../api/budgetApi";
+
 
 function BudgetSetup({ budget, setBudget }) {
   const [inputBudget, setInputBudget] = useState("");
@@ -13,13 +15,23 @@ function BudgetSetup({ budget, setBudget }) {
     }
   }, [budget]);
 
-  function handleSaveBudget() {
-    setBudget(inputBudget);
+  async function handleSaveBudget() {
+  try {
 
-    localStorage.setItem("budget", inputBudget);
+    const data = await saveBudget(Number(inputBudget));
 
-    console.log("Saved budget:", inputBudget);
+    setBudget(data.amount);
+
+    console.log("Saved budget:", data.amount);
+
+    setInputBudget("");
+
+  } catch (error) {
+
+    console.log(error.message);
+
   }
+}
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <section className="bg-white rounded-xl shadow-md p-6 dark:bg-slate-800">

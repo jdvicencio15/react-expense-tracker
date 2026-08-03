@@ -15,6 +15,9 @@ import CategorySummary from "./components/CategorySummary";
 
 import ExpenseChart from "./components/ExpenseChart";
 
+import { getBudget } from "./api/budgetApi";
+
+
 function App() {
   const [budget, setBudget] = useState(0);
 
@@ -27,14 +30,26 @@ function App() {
 
 
 
-  useEffect(() => {
-    const savedBudget = localStorage.getItem("budget");
+useEffect(() => {
 
-    if (savedBudget) {
-      setBudget(savedBudget);
+  async function fetchBudget() {
+    try {
+
+      const data = await getBudget();
+
+      if (data) {
+        setBudget(data.amount);
+      }
+
+    } catch (error) {
+      console.log(error.message);
     }
-  }, []);
+  }
 
+
+  fetchBudget();
+
+}, []);
   useEffect(() => {
 
     if (darkMode) {

@@ -1,66 +1,78 @@
 
 import { createContext, useState, useEffect } from "react";
 
+import {
+  getCreditCards,
+  addCreditCard as apiAddCreditCard,
+  deleteCreditCard as apiDeleteCreditCard,
+  updateCreditCard as apiUpdateCreditCard,
+} from "../api/creditCardApi";
+
+
+
 const CreditCardContext = createContext();
 
 export function CreditCardProvider({ children }) {
 
-      const [isLoaded, setIsLoaded] = useState(false);
+
     const [creditCards, setCreditCards] = useState([]);
 
+
+
+async function fetchCreditCards() {
+  try {
+    const data = await getCreditCards();
+
+    setCreditCards(data);
+  } catch (error) {
+    console.error(error);
+  }
+  }
+
+
+
   useEffect(() => {
-    console.log("Saving:", creditCards);
-
-    if (isLoaded) {
-      localStorage.setItem("creditCards", JSON.stringify(creditCards));
-    }
-  }, [creditCards]);
-
-  useEffect(() => {
-    //pangloading
-    const savedCreditCards = localStorage.getItem("creditCards");
-
-    if (savedCreditCards) {
-      const parsedCreditCards = JSON.parse(savedCreditCards);
-
-      setCreditCards(parsedCreditCards);
-    }
-
-    setIsLoaded(true);
-  }, []);
+  fetchCreditCards();
+}, []);
 
 
 
+async function addCreditCard(card) {
 
+  const savedCard = await apiAddCreditCard(card);
 
-      function addCreditCard(card) {
+  setCreditCards((prev) => [
+    ...prev,
+    savedCard
+  ]);
+}
 
-        setCreditCards((prev) => [
-            ...prev,
-            card
-        ]);
+async function deleteCreditCard(id) {
 
-    }
-
- function deleteCreditCard(id) {
+    await apiDeleteCreditCard(id);
 
     setCreditCards((prev) =>
-        prev.filter((card) => card.id !== id)
+        prev.filter((card) => card._id !== id)
     );
+}
 
-    }
+async function updateCreditCard(updatedCreditCard) {
 
-    function updateCreditCard(updatedCard) {
+    const savedCreditCard = await apiUpdateCreditCard(
+        updatedCreditCard._id,
+        updatedCreditCard
+    );
 
     setCreditCards((prev) =>
         prev.map((card) =>
-            card.id === updatedCard.id
-                ? updatedCard
+            card._id === savedCreditCard._id
+                ? savedCreditCard
                 : card
         )
     );
-
 }
+
+
 
 
   return (

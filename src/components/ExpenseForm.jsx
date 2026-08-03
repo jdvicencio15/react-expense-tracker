@@ -8,6 +8,7 @@ import {
   Save,
 } from "lucide-react";
 
+
 import Input from "./ui/Input";
 import Button from "./ui/Button";
 import Select from "./ui/Select";
@@ -25,6 +26,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseCategory, setExpenseCategory] = useState("");
   const [expensePaymentMethod, setExpensePaymentMethod] = useState("");
+  const [selectedCreditCard, setSelectedCreditCard] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
 
   const expenseNameRef = useRef(null);
@@ -274,9 +276,9 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
 
 
       {creditCards.map((card) => (
-        <option key={card.id} value={card.cardName}>
-          {card.cardName}
-        </option>
+        <option key={card._id} value={card.cardName}>
+  {card.cardName}
+</option>
       ))}
 
     </Select>

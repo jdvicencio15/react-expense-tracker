@@ -8,6 +8,8 @@ import {
   Wallet,
 } from "lucide-react";
 
+import Swal from "sweetalert2";
+
 import { useState, useContext } from "react";
 import formatCurrency from "../utils/formatCurrency";
 import CreditCardContext from "../context/CreditCardContext";
@@ -38,8 +40,7 @@ function CreditCardManagement() {
   }
 
   function handleEditCreditCard(id) {
-    const card = creditCards.find((card) => card.id === id);
-
+    const card = creditCards.find((card) => card._id === id);
     if (!card) {
       return;
     }
@@ -47,7 +48,7 @@ function CreditCardManagement() {
     setcreditcardName(card.cardName);
     setcreditcardLimit(card.creditLimit);
     setcreditcardDueDay(card.dueDay);
-    setEditingCreditCard(card.id);
+    setEditingCreditCard(card._id);
   }
 
   function checkInputs() {
@@ -76,7 +77,7 @@ function CreditCardManagement() {
 
     if (editingCreditCard !== null) {
       const updatedCard = {
-        id: editingCreditCard,
+        _id: editingCreditCard,
         cardName: creditcardName,
         creditLimit: Number(creditcardLimit),
         dueDay: Number(creditcardDueDay),
@@ -88,7 +89,6 @@ function CreditCardManagement() {
       resetForm();
     } else {
       const creditCard = {
-        id: Date.now(),
         cardName: creditcardName,
         creditLimit: Number(creditcardLimit),
         dueDay: Number(creditcardDueDay),
@@ -112,6 +112,33 @@ function CreditCardManagement() {
 
     return totalUsed;
   }
+
+  async function handleDeleteCreditCard(id) {
+  const result = await Swal.fire({
+    title: "Delete Credit Card?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed) {
+    await deleteCreditCard(id);
+
+    Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "Credit Card has been deleted.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  }
+  }
+
+
 
   return (
     <section className="max-w-7xl mx-auto">
@@ -275,7 +302,7 @@ function CreditCardManagement() {
 
                 return (
                   <div
-                    key={card.id}
+                    key={card._id}
                     className="
     border
     border-gray-200
@@ -355,7 +382,7 @@ function CreditCardManagement() {
                     <div className="flex gap-3 mt-5">
                       <button
                         type="button"
-                        onClick={() => handleEditCreditCard(card.id)}
+                        onClick={() => handleEditCreditCard(card._id)}
                         className="
 flex-1
 border
@@ -379,7 +406,7 @@ gap-2
 
                       <button
                         type="button"
-                        onClick={() => deleteCreditCard(card.id)}
+                        onClick={() => handleDeleteCreditCard(card._id)}
                         className="
 flex-1
 border

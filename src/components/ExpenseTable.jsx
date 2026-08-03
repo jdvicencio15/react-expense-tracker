@@ -4,6 +4,8 @@ import formatDate from "../utils/formatDate";
 import useExpenses from "../hooks/useExpenses";
 import { useState, useEffect } from "react";
 
+import Swal from "sweetalert2";
+
 function ExpenseTable({
 
   setEditingExpense
@@ -89,6 +91,35 @@ const endItem = Math.min(
   console.log("expenses:", expenses);
 console.log("filteredExpenses:", filteredExpenses);
 console.log("currentExpenses:", currentExpenses);
+
+
+
+  async function handleDeleteExpense(id) {
+  const result = await Swal.fire({
+    title: "Delete Expense?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed) {
+    await deleteExpense(id);
+
+    Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "Expense has been deleted.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  }
+}
+
+
 
 
   return (
@@ -256,7 +287,7 @@ transition
 
                         <button
                           type="button"
-                          onClick={() => deleteExpense(expense._id)}
+                            onClick={() => handleDeleteExpense(expense._id)}
                           className="px-3 py-1 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition"
                         >
                           🗑 Delete
