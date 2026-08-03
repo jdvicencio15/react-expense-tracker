@@ -7,6 +7,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 
+import CreditCardSummary from "./CreditCardSummary";
 import Card from "./Card";
 import formatCurrency from "../utils/formatCurrency";
 
@@ -15,14 +16,14 @@ import useExpenses from "../hooks/useExpenses";
 // Payment methods considered as cash expenses
 const CASH_PAYMENT_METHODS = ["Cash", "Bank Transfer", "E-Wallet"];
 
-function Dashboard({ budget }) {
+function Dashboard({ budget, creditCards  }) {
   const { filteredExpenses } = useExpenses();
 
   // Check if there are expenses
   const hasExpenses = filteredExpenses.length > 0;
 
   // Calculate total cash expenses only
-  const totalExpenses = filteredExpenses.reduce((total, expense) => {
+  const  totalExpenses = filteredExpenses.reduce((total, expense) => {
     if (CASH_PAYMENT_METHODS.includes(expense.paymentMethod)) {
       return total + Number(expense.amount);
     }
@@ -120,19 +121,25 @@ function Dashboard({ budget }) {
         </p>
       </div>
 
-      <div
-        className="
-      grid
-    grid-cols-1
-    sm:grid-cols-2
-    lg:grid-cols-3
-    gap-6
-    "
-      >
-        {summaryCards.map((card) => (
-          <Card key={card.title} {...card} />
-        ))}
-      </div>
+   <div
+  className="
+  grid
+  grid-cols-1
+  sm:grid-cols-2
+  lg:grid-cols-3
+  gap-6
+  "
+>
+  {summaryCards.map((card) => (
+    <Card key={card.title} {...card} />
+  ))}
+
+  <CreditCardSummary
+    creditCards={creditCards}
+    expenses={filteredExpenses}
+  />
+
+</div>
     </section>
   );
 }

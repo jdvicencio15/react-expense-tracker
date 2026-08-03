@@ -307,7 +307,7 @@ function CreditCardManagement() {
                   type="text"
                   placeholder="Enter card name"
                   value={creditCardName}
-                  onChange={(e) => setcreditcardName(e.target.value)}
+                  onChange={(e) => setCreditCardName(e.target.value)}
                   className="
             w-full
             rounded-lg

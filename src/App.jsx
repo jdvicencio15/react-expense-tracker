@@ -19,6 +19,9 @@ function App() {
   // Track expense being edited
   const [editingExpense, setEditingExpense] = useState(null);
 
+  const [creditCards, setCreditCards] = useState([]);
+
+
   // Control application theme
   const [darkMode, setDarkMode] = useState(false);
 
@@ -60,7 +63,9 @@ function App() {
       >
         <BudgetSetup budget={budget} setBudget={setBudget} />
 
-        <Dashboard budget={budget} />
+        <Dashboard
+          budget={budget}
+        creditCards={creditCards}/>
 
         <ExpenseChart />
 
