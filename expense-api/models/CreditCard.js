@@ -1,7 +1,15 @@
 const mongoose = require("mongoose");
 
+
 const creditCardSchema = new mongoose.Schema(
   {
+    // Owner of the credit card
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     // Credit card basic information
     cardName: {
       type: String,
@@ -9,14 +17,12 @@ const creditCardSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Maximum spending limit of the card
     creditLimit: {
       type: Number,
       required: [true, "Credit limit is required"],
       min: [0, "Credit limit cannot be negative"],
     },
 
-    // Day of the month when payment is due
     dueDay: {
       type: Number,
       required: [true, "Due day is required"],
@@ -29,6 +35,4 @@ const creditCardSchema = new mongoose.Schema(
   }
 );
 
-const CreditCard = mongoose.model("CreditCard", creditCardSchema);
-
-module.exports = CreditCard;
+module.exports = mongoose.model("CreditCard", creditCardSchema);

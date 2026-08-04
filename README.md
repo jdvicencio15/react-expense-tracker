@@ -1,85 +1,235 @@
-# 💰 React Expense Tracker
+# 💰 AK's Expense Tracker V1
 
-A modern full-stack expense tracking application built with React, Node.js, Express, and MongoDB.
+A modern full-stack expense management application built with the **MERN Stack**.
 
-## ✨ Features
+AK's Expense Tracker helps users manage daily expenses, monitor budgets, track credit cards, and visualize spending habits through a clean, responsive dashboard.
 
-### 💵 Expense Management
+Built to practice and showcase real-world full-stack development concepts including authentication, REST API design, database integration, and scalable React architecture.
 
-* ✅ Add expenses
-* ✅ View expenses from MongoDB
-* ✅ Edit expenses
-* ✅ Delete expenses
-* ✅ Full CRUD integration with REST API
+---
 
-### 📊 Dashboard & Analytics
+# ✨ Features
 
-* 📊 Dashboard Overview
-* 📈 Expense Summary
-* 🔎 Search and Filter Expenses
-* 📅 Monthly Expense Filtering
-* 📄 Pagination
-* 📥 CSV Export
+## 🔐 Authentication System
 
-### 💳 Financial Management
+* ✅ User Registration
+* ✅ Secure Login Authentication
+* ✅ JWT-based Authentication
+* ✅ Password Hashing with bcrypt
+* ✅ Remember Me Functionality
+* ✅ Protected Routes
+* ✅ User-specific Data Access
+
+---
+
+## 💵 Expense Management
+
+* ✅ Add Expenses
+* ✅ View Expenses
+* ✅ Edit Expenses
+* ✅ Delete Expenses
+* ✅ Full CRUD Integration
+* ✅ Search Expenses
+* ✅ Monthly Filtering
+* ✅ Pagination Support
+* ✅ CSV Export
+
+---
+
+## 📊 Dashboard & Analytics
+
+* 📊 Expense Overview Dashboard
+* 📈 Spending Summary
+* 📉 Category Breakdown
+* 💰 Budget Monitoring
+* 📅 Monthly Expense Tracking
+* 📊 Visual Expense Analytics
+
+---
+
+## 💳 Financial Management
 
 * 💳 Credit Card Management
-* 💰 Budget Management
+* 💰 Monthly Budget Management
+* 📌 Payment Method Tracking
+* 📌 Expense Categorization
 
-### 🎨 UI Features
+---
 
-* 🌙 Dark Mode
+## 🎨 UI / UX Features
+
+* 🌙 Dark Mode Support
 * 📱 Responsive Design
+* 🎨 Modern Dashboard Interface
+* ⚡ Fast React-based User Experience
 
-## 🛠 Tech Stack
+---
 
-### Frontend
+# 🛠 Tech Stack
+
+## Frontend
 
 * React
 * Vite
+* React Router
 * Tailwind CSS
 * Context API
+* Lucide React
+* Recharts
 
-### Backend
+## Backend
 
 * Node.js
 * Express.js
 * REST API
+* JWT Authentication
+* bcrypt Password Security
 
-### Database
+## Database
 
 * MongoDB Atlas
-* Mongoose
+* Mongoose ODM
 
-### Tools
+## Development Tools
 
 * Git
 * GitHub
+* Postman
 
-## 🚀 Installation
+---
 
-Frontend
+# 🏗 Application Architecture
+
+```
+Frontend (React)
+        |
+        |
+ REST API Requests
+        |
+        ↓
+Backend (Express + Node.js)
+        |
+        |
+        ↓
+MongoDB Atlas Database
+```
+
+---
+
+# 📂 Project Structure
+
+```
+AK-Expense-Tracker
+
+frontend
+│
+├── components
+├── pages
+├── context
+├── hooks
+├── api
+└── utils
+
+
+backend
+│
+├── controllers
+├── routes
+├── models
+├── middleware
+├── config
+└── server.js
+```
+
+---
+
+# 🚀 Installation
+
+## Clone Repository
+
+```bash
+git clone <repository-url>
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
 
 npm install
-npm run dev
 
-Backend
+npm run dev
+```
+
+---
+
+## Backend Setup
+
+```bash
+cd backend
 
 npm install
+
 npm run dev
+```
 
-## 📂 Project Highlights
+---
 
-* React frontend connected to Express backend
-* Expense data persisted in MongoDB
-* RESTful API implementation
-* Context API used for state management
-* Full CRUD operations implemented
+# 🔑 Authentication Flow
 
-## 📸 Screenshots
+```
+Register
+    ↓
+Create User Account
+    ↓
+Password Hashed
+    ↓
+Stored in MongoDB
+    ↓
+Login
+    ↓
+JWT Token Generated
+    ↓
+Protected Dashboard Access
+```
+
+---
+
+# 📌 Project Highlights
+
+* Built a complete MERN full-stack application
+* Implemented JWT authentication system
+* Integrated React frontend with Express REST API
+* Designed MongoDB data models
+* Implemented complete CRUD operations
+* Managed application state using Context API
+* Created reusable and scalable component structure
+
+---
+
+# 🔮 Future Improvements
+
+* 🔐 Forgot Password / Password Reset
+* 📧 Email Verification
+* 👤 User Profile Management
+* 📊 Advanced Financial Reports
+* 📄 PDF Export
+* 🔔 Budget Notifications
+* 🚀 Production Deployment
+* ⚡ Performance Optimization
+
+---
+
+# 📸 Screenshots
 
 Coming Soon...
 
-## 👨‍💻 Author
+---
 
-Darren Vicencio
+# 👨‍💻 Author
+
+**Darren Vicencio**
+
+Full-stack developer building practical applications using modern web technologies.

@@ -11,6 +11,8 @@ const connectDB = require("./config/db");
 const expenseRoutes = require("./routes/expenseRoutes");
 const creditCardRoutes = require("./routes/creditCardRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/errorHandler");
@@ -29,7 +31,7 @@ app.use(express.json());
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/creditcards", creditCardRoutes);
 app.use("/api/budget", budgetRoutes);
-
+app.use("/api/users", userRoutes);
 
 // Health check
 app.get("/", (req, res) => {

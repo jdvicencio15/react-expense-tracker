@@ -6,8 +6,9 @@ const getBudget = async (req, res, next) => {
   try {
 
     // Retrieve existing budget record
-    const budget = await Budget.findOne();
-
+    const budget = await Budget.findOne({
+  user: req.user._id,
+})
 
     res.status(200).json({
       success: true,
@@ -38,7 +39,9 @@ const saveBudget = async (req, res, next) => {
 
 
     // Check if budget already exists
-    let budget = await Budget.findOne();
+   let budget = await Budget.findOne({
+  user: req.user._id,
+});
 
 
     if (budget) {
@@ -57,15 +60,15 @@ const saveBudget = async (req, res, next) => {
 
 
     // Create first budget record
-    const newBudget = await Budget.create({
-      amount,
-    });
+const newBudget = await Budget.create({
+  amount,
+  user: req.user._id,
+});
 
-
-    res.status(201).json({
-      success: true,
-      data: newBudget,
-    });
+res.status(201).json({
+  success: true,
+  data: newBudget,
+});
 
 
   } catch (error) {

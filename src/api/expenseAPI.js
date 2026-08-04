@@ -4,11 +4,19 @@ const API_URL = "http://localhost:5000/api/expenses";
 // Get all expenses
 export async function getExpenses() {
 
-  const response = await fetch(API_URL);
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
 
   if (!response.ok) {
     throw new Error("Failed to fetch expenses");
   }
+
 
   const result = await response.json();
 
@@ -16,14 +24,21 @@ export async function getExpenses() {
 }
 
 
+
 // Add expense
 export async function addExpense(expense) {
 
+  const token = localStorage.getItem("token");
+
   const response = await fetch(API_URL, {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json",
+
+      Authorization: `Bearer ${token}`,
     },
+
     body: JSON.stringify(expense),
   });
 
@@ -39,11 +54,18 @@ export async function addExpense(expense) {
 }
 
 
+
 // Delete expense
 export async function deleteExpense(id) {
 
+  const token = localStorage.getItem("token");
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
 
@@ -58,14 +80,21 @@ export async function deleteExpense(id) {
 }
 
 
+
 // Update expense
 export async function updateExpense(id, expense) {
 
+  const token = localStorage.getItem("token");
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
+
     headers: {
       "Content-Type": "application/json",
+
+      Authorization: `Bearer ${token}`,
     },
+
     body: JSON.stringify(expense),
   });
 

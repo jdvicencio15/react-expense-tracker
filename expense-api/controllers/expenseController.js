@@ -6,7 +6,9 @@ async function getExpenses(req, res, next) {
   try {
 
     // Retrieve all expense records from MongoDB
-    const expenses = await Expense.find();
+    const expenses = await Expense.find({
+  user: req.user._id,
+});
 
     res.status(200).json({
       success: true,
@@ -25,7 +27,10 @@ async function getExpenseById(req, res, next) {
 
     const { id } = req.params;
 
-    const expense = await Expense.findById(id);
+    const expense = await Expense.findOne({
+  _id: id,
+  user: req.user._id,
+});
 
     if (!expense) {
       return res.status(404).json({
@@ -70,7 +75,10 @@ async function addExpense(req, res, next) {
     }
 
 
-    const expense = await Expense.create(req.body);
+    const expense = await Expense.create({
+  ...req.body,
+  user: req.user._id,
+});
 
 
     res.status(201).json({
@@ -92,14 +100,17 @@ async function updateExpense(req, res, next) {
     const { id } = req.params;
 
 
-    const updatedExpense = await Expense.findByIdAndUpdate(
-      id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+  const updatedExpense = await Expense.findOneAndUpdate(
+  {
+    _id: id,
+    user: req.user._id,
+  },
+  req.body,
+  {
+    new: true,
+    runValidators: true,
+  }
+);
 
 
     if (!updatedExpense) {
@@ -129,7 +140,10 @@ async function deleteExpense(req, res, next) {
     const { id } = req.params;
 
 
-    const deletedExpense = await Expense.findByIdAndDelete(id);
+    const deletedExpense = await Expense.findOneAndDelete({
+  _id: id,
+  user: req.user._id,
+});
 
 
     if (!deletedExpense) {

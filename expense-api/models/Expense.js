@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const ExpenseSchema = new mongoose.Schema(
   {
+    // Owner of the expense
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     // Basic expense information
     name: {
       type: String,
@@ -33,7 +40,6 @@ const ExpenseSchema = new mongoose.Schema(
     },
   },
   {
-    // Automatically add createdAt and updatedAt fields
     timestamps: true,
   }
 );

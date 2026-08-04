@@ -1,4 +1,9 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import { useState, useEffect } from "react";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 import Header from "./components/Header";
 import BudgetSetup from "./components/BudgetSetup";
@@ -7,42 +12,60 @@ import Dashboard from "./components/Dashboard";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseTable from "./components/ExpenseTable";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import CategorySummary from "./components/CategorySummary";
 import ExpenseChart from "./components/ExpenseChart";
 
 import { getBudget } from "./api/budgetApi";
+import { useAuth } from "./context/AuthContext";
 
-function App() {
-  // Store current budget value
+function DashboardPage() {
+  const { token } = useAuth();
+
   const [budget, setBudget] = useState(0);
 
-  // Track expense being edited
   const [editingExpense, setEditingExpense] = useState(null);
 
   const [creditCards, setCreditCards] = useState([]);
 
-
-  // Control application theme
   const [darkMode, setDarkMode] = useState(false);
 
-  // Load budget from backend on startup
-  useEffect(() => {
-    async function fetchBudget() {
-      try {
-        const data = await getBudget();
+useEffect(() => {
 
-        if (data) {
-          setBudget(data.amount);
-        }
-      } catch (error) {
-        console.error("Failed to fetch budget:", error.message);
+  async function fetchBudget() {
+
+    try {
+
+      const data = await getBudget();
+
+      if (data) {
+        setBudget(data.amount);
+      } else {
+        setBudget(0);
       }
+
+    } catch (error) {
+
+      console.error(
+        "Failed to fetch budget:",
+        error.message
+      );
+
     }
 
-    fetchBudget();
-  }, []);
+  }
 
-  // Apply dark mode class to HTML root
+
+  if (token) {
+    fetchBudget();
+  } else {
+    setBudget(0);
+  }
+
+
+}, [token]);
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
@@ -59,13 +82,11 @@ function App() {
         py-8
         lg:px-6
         space-y-8
-      "
+        "
       >
         <BudgetSetup budget={budget} setBudget={setBudget} />
 
-        <Dashboard
-          budget={budget}
-        creditCards={creditCards}/>
+        <Dashboard budget={budget} creditCards={creditCards} />
 
         <ExpenseChart />
 
@@ -76,7 +97,7 @@ function App() {
           xl:grid-cols-5
           gap-8
           items-start
-        "
+          "
         >
           <div className="xl:col-span-2">
             <ExpenseForm
@@ -95,6 +116,31 @@ function App() {
         <ExpenseTable setEditingExpense={setEditingExpense} />
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* PUBLIC ROUTES */}
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/register" element={<Register />} />
+
+        {/* DASHBOARD */}
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

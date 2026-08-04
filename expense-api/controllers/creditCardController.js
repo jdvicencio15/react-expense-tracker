@@ -1,32 +1,31 @@
 const CreditCard = require("../models/CreditCard");
 
-
 // Get all credit cards
 async function getCreditCards(req, res, next) {
   try {
-
     // Retrieve all credit cards from MongoDB
-    const creditCards = await CreditCard.find();
+    const creditCards = await CreditCard.find({
+      user: req.user._id,
+    });
 
     res.status(200).json({
       success: true,
       data: creditCards,
     });
-
   } catch (error) {
     next(error);
   }
 }
 
-
 // Get credit card by ID
 async function getCreditCardById(req, res, next) {
   try {
-
     const { id } = req.params;
 
-    const creditCard = await CreditCard.findById(id);
-
+    const creditCard = await CreditCard.findOne({
+      _id: id,
+      user: req.user._id,
+    });
 
     if (!creditCard) {
       return res.status(404).json({
@@ -35,29 +34,19 @@ async function getCreditCardById(req, res, next) {
       });
     }
 
-
     res.status(200).json({
       success: true,
       data: creditCard,
     });
-
-
   } catch (error) {
     next(error);
   }
 }
 
-
 // Create credit card
 async function addCreditCard(req, res, next) {
   try {
-
-    const {
-      cardName,
-      creditLimit,
-      dueDay
-    } = req.body;
-
+    const { cardName, creditLimit, dueDay } = req.body;
 
     // Validate required fields
     if (!cardName || !creditLimit || !dueDay) {
@@ -67,7 +56,6 @@ async function addCreditCard(req, res, next) {
       });
     }
 
-
     // Validate credit limit value
     if (isNaN(creditLimit) || Number(creditLimit) <= 0) {
       return res.status(400).json({
@@ -76,38 +64,36 @@ async function addCreditCard(req, res, next) {
       });
     }
 
-
-    const creditCard = await CreditCard.create(req.body);
-
+    const creditCard = await CreditCard.create({
+      ...req.body,
+      user: req.user._id,
+    });
 
     res.status(201).json({
       success: true,
       data: creditCard,
     });
-
-
   } catch (error) {
     next(error);
   }
 }
 
-
 // Update credit card
 async function updateCreditCard(req, res, next) {
   try {
-
     const { id } = req.params;
 
-
-    const updatedCreditCard = await CreditCard.findByIdAndUpdate(
-      id,
+    const updatedCreditCard = await CreditCard.findOneAndUpdate(
+      {
+        _id: id,
+        user: req.user._id,
+      },
       req.body,
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
-
 
     if (!updatedCreditCard) {
       return res.status(404).json({
@@ -116,28 +102,24 @@ async function updateCreditCard(req, res, next) {
       });
     }
 
-
     res.status(200).json({
       success: true,
       data: updatedCreditCard,
     });
-
-
   } catch (error) {
     next(error);
   }
 }
 
-
 // Delete credit card
 async function deleteCreditCard(req, res, next) {
   try {
-
     const { id } = req.params;
 
-
-    const deletedCreditCard = await CreditCard.findByIdAndDelete(id);
-
+    const deletedCreditCard = await CreditCard.findOneAndDelete({
+      _id: id,
+      user: req.user._id,
+    });
 
     if (!deletedCreditCard) {
       return res.status(404).json({
@@ -146,19 +128,15 @@ async function deleteCreditCard(req, res, next) {
       });
     }
 
-
     res.status(200).json({
       success: true,
       message: "Credit Card deleted successfully",
       data: deletedCreditCard,
     });
-
-
   } catch (error) {
     next(error);
   }
 }
-
 
 module.exports = {
   getCreditCards,

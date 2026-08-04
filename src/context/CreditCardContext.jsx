@@ -7,14 +7,18 @@ import {
   updateCreditCard as apiUpdateCreditCard,
 } from "../api/creditCardApi";
 
+import { useAuth } from "./AuthContext";
 
 const CreditCardContext = createContext();
 
 
 export function CreditCardProvider({ children }) {
 
+   const { token } = useAuth();
   // Store credit card data from backend
   const [creditCards, setCreditCards] = useState([]);
+
+
 
 
 
@@ -40,10 +44,15 @@ export function CreditCardProvider({ children }) {
 
 
 
-  useEffect(() => {
-    fetchCreditCards();
-  }, []);
+useEffect(() => {
 
+  if(token){
+    fetchCreditCards();
+  } else {
+    setCreditCards([]);
+  }
+
+}, [token]);
 
 
 

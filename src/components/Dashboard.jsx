@@ -13,6 +13,7 @@ import formatCurrency from "../utils/formatCurrency";
 
 import useExpenses from "../hooks/useExpenses";
 
+
 // Payment methods considered as cash expenses
 const CASH_PAYMENT_METHODS = ["Cash", "Bank Transfer", "E-Wallet"];
 

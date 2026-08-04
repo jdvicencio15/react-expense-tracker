@@ -10,11 +10,16 @@ import {
   updateExpense as apiUpdateExpense,
 } from "../api/expenseApi";
 
+import { useAuth } from "./AuthContext";
+
 
 const ExpenseContext = createContext();
 
 
 export function ExpenseProvider({ children }) {
+
+  const { token } = useAuth();
+
 
   // Store all expenses fetched from backend
   const [expenses, setExpenses] = useState([]);
@@ -40,9 +45,15 @@ export function ExpenseProvider({ children }) {
   }
 
 
-  useEffect(() => {
+useEffect(() => {
+
+  if(token){
     fetchExpenses();
-  }, []);
+  } else {
+    setExpenses([]);
+  }
+
+}, [token]);
 
 
 
