@@ -249,10 +249,17 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
               onChange={(e) => setExpenseCategory(e.target.value)}
             >
               <option value="">Select Category</option>
-              <option value="Food">Food</option>
-              <option value="Transportation">Transportation</option>
-              <option value="Bills">Bills</option>
-              <option value="Others">Others</option>
+             <option value="Groceries">Groceries</option>
+<option value="Baby">Baby Expenses</option>
+<option value="Transportation">Transportation</option>
+<option value="Bills">Bills</option>
+<option value="Housing">Housing</option>
+<option value="Healthcare">Healthcare</option>
+<option value="Education">Education</option>
+<option value="Loan Payment">Loan Payment</option>
+<option value="Shopping">Shopping</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Others">Others</option>
             </Select>
           </div>
         </div>
