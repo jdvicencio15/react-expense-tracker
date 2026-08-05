@@ -143,7 +143,7 @@ function App() {
         {/* DASHBOARD */}
 
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <DashboardPage />

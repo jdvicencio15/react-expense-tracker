@@ -1,29 +1,10 @@
-
-import { getToken } from "../utils/auth";
-
-const API_URL = "http://localhost:5000/api/budget";
-
-
+import { apiRequest } from "./apiClient";
 
 
 // Get current budget
 export async function getBudget() {
 
-  const token = getToken();
-
-  const response = await fetch(API_URL, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch budget");
-  }
-
-
-  const result = await response.json();
+  const result = await apiRequest("/api/budget");
 
   return result.data;
 }
@@ -33,26 +14,14 @@ export async function getBudget() {
 // Create or update budget
 export async function saveBudget(amount) {
 
-  const token = getToken();
-
-  const response = await fetch(API_URL, {
+  const result = await apiRequest("/api/budget", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+
     body: JSON.stringify({
       amount,
     }),
   });
 
-
-  if (!response.ok) {
-    throw new Error("Failed to save budget");
-  }
-
-
-  const result = await response.json();
 
   return result.data;
 }

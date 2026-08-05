@@ -88,10 +88,7 @@ localStorage.removeItem("token");
 sessionStorage.removeItem("user");
 sessionStorage.removeItem("token");
 
-  // Remove old local storage data
-  localStorage.removeItem("expenses");
-  localStorage.removeItem("budget");
-  localStorage.removeItem("creditCards");
+
 }
 
   return (

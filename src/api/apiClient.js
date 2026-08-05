@@ -1,4 +1,12 @@
-const API_URL = "http://localhost:5000/api";
+import { getToken, removeToken } from "../utils/auth";
+
+import toast from "react-hot-toast";
+
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 
 
 export async function apiRequest(
@@ -6,7 +14,7 @@ export async function apiRequest(
   options = {}
 ) {
 
-  const token = localStorage.getItem("token");
+const token = getToken();
 
 
   const response = await fetch(
@@ -27,16 +35,37 @@ export async function apiRequest(
   );
 
 
-  const result = await response.json();
+ const result = await response.json().catch(() => ({}));
 
 
-  if (!response.ok) {
-    throw new Error(
-      result.message || "Request failed"
-    );
-  }
+if (!response.ok) {
 
+  if (response.status === 401) {
+
+  removeToken();
+
+  toast.error("Session expired. Please login again.");
+
+  setTimeout(() => {
+    window.location.href = "/login";
+  }, 2000);
+
+  return;
+}
+
+
+  toast.error(
+    result.message || "Request failed"
+  );
+
+
+  throw new Error(
+    result.message || "Request failed"
+  );
+}
 
   return result;
 
 }
+
+export default API_URL;

@@ -63,7 +63,7 @@ function Login() {
         rememberMe,
       });
 
-      navigate("/");
+      navigate("/dashboard");
 
 
     } catch (error) {
