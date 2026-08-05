@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route , Navigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
@@ -23,6 +23,9 @@ import ExpenseChart from "./components/ExpenseChart";
 
 import { getBudget } from "./api/budgetApi";
 import { useAuth } from "./context/AuthContext";
+
+
+
 
 function DashboardPage() {
   const { token } = useAuth();
@@ -124,35 +127,59 @@ useEffect(() => {
 }
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* PUBLIC ROUTES */}
+ return (
+  <BrowserRouter>
+    <Routes>
 
-        <Route path="/login" element={<Login />} />
+      {/* ROOT REDIRECT */}
+      <Route
+        path="/"
+        element={<Navigate to="/login" replace />}
+      />
 
-        <Route path="/register" element={<Register />} />
+      {/* PUBLIC ROUTES */}
 
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-       <Route
- path="/reset-password/:token"
- element={<ResetPassword />}
-/>
+      <Route
+        path="/register"
+        element={<Register />}
+      />
 
-        {/* DASHBOARD */}
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  );
+      <Route
+        path="/reset-password/:token"
+        element={<ResetPassword />}
+      />
+
+
+      {/* DASHBOARD */}
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* FALLBACK */}
+      <Route
+        path="*"
+        element={<Navigate to="/login" replace />}
+      />
+
+    </Routes>
+  </BrowserRouter>
+);
 }
 
 export default App;
