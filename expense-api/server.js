@@ -23,14 +23,13 @@ const PORT = process.env.PORT || 5000;
 
 
 // Global middleware
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://react-expense-tracker-pakd.onrender.com"
+  ],
+  credentials: true
+}));
 
 
 app.use(express.json());
