@@ -2,7 +2,7 @@
 
 A modern full-stack expense management application built with the **MERN Stack**.
 
-AK's Expense Tracker helps users manage daily expenses, monitor budgets, track credit cards, and visualize spending habits through a clean, responsive dashboard.
+AK's Expense Tracker helps users manage daily expenses, monitor budgets, track credit cards, and visualize spending habits through a clean and responsive dashboard.
 
 Built to practice and showcase real-world full-stack development concepts including authentication, REST API design, database integration, and scalable React architecture.
 
@@ -19,6 +19,9 @@ Built to practice and showcase real-world full-stack development concepts includ
 * ✅ Remember Me Functionality
 * ✅ Protected Routes
 * ✅ User-specific Data Access
+* ✅ Forgot Password Flow
+* ✅ Password Reset System
+* ✅ Secure Token Handling
 
 ---
 
@@ -62,6 +65,7 @@ Built to practice and showcase real-world full-stack development concepts includ
 * 📱 Responsive Design
 * 🎨 Modern Dashboard Interface
 * ⚡ Fast React-based User Experience
+* 🧩 Reusable Component Architecture
 
 ---
 
@@ -76,6 +80,7 @@ Built to practice and showcase real-world full-stack development concepts includ
 * Context API
 * Lucide React
 * Recharts
+* Fetch API
 
 ## Backend
 
@@ -84,6 +89,9 @@ Built to practice and showcase real-world full-stack development concepts includ
 * REST API
 * JWT Authentication
 * bcrypt Password Security
+* Express Middleware
+* CORS Configuration
+* Environment Variables
 
 ## Database
 
@@ -100,14 +108,20 @@ Built to practice and showcase real-world full-stack development concepts includ
 
 # 🏗 Application Architecture
 
-```
-Frontend (React)
+```text
+React Frontend
         |
-        |
- REST API Requests
         |
         ↓
-Backend (Express + Node.js)
+Fetch API Requests
+        |
+        |
+        ↓
+Express REST API
+        |
+        |
+        ↓
+JWT Authentication Middleware
         |
         |
         ↓
@@ -118,20 +132,28 @@ MongoDB Atlas Database
 
 # 📂 Project Structure
 
-```
+```text
 AK-Expense-Tracker
 
-frontend
+src
 │
 ├── components
+│   ├── auth
+│   ├── dashboard
+│   └── shared
+│
 ├── pages
+│
 ├── context
+│
 ├── hooks
+│
 ├── api
+│
 └── utils
 
 
-backend
+expense-api
 │
 ├── controllers
 ├── routes
@@ -156,7 +178,7 @@ git clone <repository-url>
 ## Frontend Setup
 
 ```bash
-cd frontend
+cd react-expense-tracker
 
 npm install
 
@@ -168,7 +190,7 @@ npm run dev
 ## Backend Setup
 
 ```bash
-cd backend
+cd expense-api
 
 npm install
 
@@ -179,12 +201,12 @@ npm run dev
 
 # 🔑 Authentication Flow
 
-```
+```text
 Register
     ↓
 Create User Account
     ↓
-Password Hashed
+Password Hashed using bcrypt
     ↓
 Stored in MongoDB
     ↓
@@ -192,7 +214,9 @@ Login
     ↓
 JWT Token Generated
     ↓
-Protected Dashboard Access
+Protected API Access
+    ↓
+Dashboard Access
 ```
 
 ---
@@ -200,25 +224,27 @@ Protected Dashboard Access
 # 📌 Project Highlights
 
 * Built a complete MERN full-stack application
-* Implemented JWT authentication system
+* Implemented JWT authentication and protected routes
 * Integrated React frontend with Express REST API
-* Designed MongoDB data models
+* Designed MongoDB data models using Mongoose
 * Implemented complete CRUD operations
 * Managed application state using Context API
-* Created reusable and scalable component structure
+* Created reusable authentication components
+* Built Forgot Password and Password Reset workflow
+* Applied separation of concerns between UI, API, and business logic
+* Created a scalable project structure for future improvements
 
 ---
 
 # 🔮 Future Improvements
 
-* 🔐 Forgot Password / Password Reset
 * 📧 Email Verification
 * 👤 User Profile Management
 * 📊 Advanced Financial Reports
 * 📄 PDF Export
 * 🔔 Budget Notifications
-* 🚀 Production Deployment
 * ⚡ Performance Optimization
+* 📱 Mobile Application Version
 
 ---
 
@@ -232,4 +258,7 @@ Coming Soon...
 
 **Darren Vicencio**
 
-Full-stack developer building practical applications using modern web technologies.
+Full-stack developer focused on building practical and scalable web applications using modern JavaScript technologies.
+
+```
+```

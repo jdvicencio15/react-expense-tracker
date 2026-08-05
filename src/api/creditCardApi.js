@@ -1,10 +1,13 @@
+import { getToken } from "../utils/auth";
+
+
 const API_URL = "http://localhost:5000/api/creditcards";
 
 
 // Get all credit cards
 export async function getCreditCards() {
 
-  const token = localStorage.getItem("token");
+ const token = getToken();
 
   const response = await fetch(API_URL, {
     headers: {
@@ -28,7 +31,7 @@ export async function getCreditCards() {
 // Add credit card
 export async function addCreditCard(creditCard) {
 
-  const token = localStorage.getItem("token");
+const token = getToken();
 
   const response = await fetch(API_URL, {
     method: "POST",
@@ -55,7 +58,7 @@ export async function addCreditCard(creditCard) {
 // Delete credit card
 export async function deleteCreditCard(id) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
@@ -80,7 +83,7 @@ export async function deleteCreditCard(id) {
 // Update credit card
 export async function updateCreditCard(id, creditCard) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",

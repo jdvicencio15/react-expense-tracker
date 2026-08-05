@@ -37,3 +37,45 @@ export async function login(userData) {
 
   return data;
 }
+
+export async function forgotPassword(email) {
+  const response = await fetch(`${API_URL}/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to generate reset token");
+  }
+
+  return data;
+}
+
+
+export async function resetPassword(token, password) {
+  const response = await fetch(`${API_URL}/reset-password`, {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      token,
+      password,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Password reset failed");
+  }
+
+  return data;
+}

@@ -1,10 +1,15 @@
+
+import { getToken } from "../utils/auth";
+
 const API_URL = "http://localhost:5000/api/budget";
+
+
 
 
 // Get current budget
 export async function getBudget() {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(API_URL, {
     headers: {
@@ -28,7 +33,7 @@ export async function getBudget() {
 // Create or update budget
 export async function saveBudget(amount) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(API_URL, {
     method: "POST",

@@ -105,7 +105,7 @@ function handleLogout() {
      text-gray-500
     dark:text-white
   ">
-    Welcome back, {user.firstName} 👋
+    Welcome! {user.firstName} 👋
   </p>
 )}
 

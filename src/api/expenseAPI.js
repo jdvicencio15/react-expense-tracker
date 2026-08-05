@@ -1,10 +1,13 @@
+import { getToken } from "../utils/auth";
+
+
 const API_URL = "http://localhost:5000/api/expenses";
 
 
 // Get all expenses
 export async function getExpenses() {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(API_URL, {
     headers: {
@@ -28,7 +31,7 @@ export async function getExpenses() {
 // Add expense
 export async function addExpense(expense) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(API_URL, {
     method: "POST",
@@ -58,7 +61,7 @@ export async function addExpense(expense) {
 // Delete expense
 export async function deleteExpense(id) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
@@ -84,7 +87,7 @@ export async function deleteExpense(id) {
 // Update expense
 export async function updateExpense(id, expense) {
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
 
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",

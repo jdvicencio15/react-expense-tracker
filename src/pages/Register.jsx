@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Eye,
-  EyeOff,
-  Mail,
   Lock,
   User,
-  Wallet,
+  Mail,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
+
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthInput from "../components/auth/AuthInput";
+import PasswordInput from "../components/auth/PasswordInput";
+
+
+import Swal from "sweetalert2";
 
 
 function Register() {
@@ -28,9 +32,6 @@ function Register() {
   });
 
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
   const [error, setError] = useState("");
@@ -89,6 +90,16 @@ function Register() {
 
 
 
+await Swal.fire({
+  icon: "success",
+  title: "Account Created!",
+  text: "Your account has been created successfully.",
+  timer: 2000,
+  timerProgressBar: true,
+  showConfirmButton: false,
+});
+
+
 navigate("/login", {
   state: {
     message: "Account created successfully. Please login."
@@ -115,536 +126,187 @@ navigate("/login", {
 
   return (
 
-    <div className="
-      min-h-screen
-      flex
-      items-center
-      justify-center
-      px-4
-      bg-gradient-to-br
-      from-blue-50
-      via-white
-      to-blue-100
-      dark:from-slate-900
-      dark:via-slate-900
-      dark:to-slate-800
-    ">
+<AuthLayout
+  title="Sign up"
+  subtitle="Create your account and start managing your money."
+>
+
+
+{error && (
+
+<div
+className="
+mb-4
+p-3
+rounded-xl
+bg-red-100
+text-red-600
+dark:bg-red-900/30
+dark:text-red-300
+text-sm
+"
+>
+{error}
+</div>
+
+)}
+
+
+
+<form
+onSubmit={handleSubmit}
+className="space-y-3"
+>
+
+
+<div
+className="
+grid
+grid-cols-2
+gap-3
+"
+>
+
+
+<AuthInput
+label="First Name"
+type="text"
+name="firstName"
+placeholder="First Name"
+icon={User}
+value={formData.firstName}
+onChange={handleChange}
+autoComplete="given-name"
+required
+/>
 
 
-      <div className="
-        w-full
-        max-w-md
-        bg-white
-        dark:bg-slate-800
-        rounded-3xl
-        shadow-xl
-        p-8
-      ">
+<AuthInput
+label="Last Name"
+type="text"
+name="lastName"
+placeholder="Last Name"
+value={formData.lastName}
+onChange={handleChange}
+autoComplete="family-name"
+required
+/>
 
 
-        {/* LOGO */}
+</div>
 
-        <div className="
-          flex
-          justify-center
-          mb-5
-        ">
+
+
+<AuthInput
+label="Email Address"
+type="email"
+name="email"
+placeholder="Enter your email"
+icon={Mail}
+value={formData.email}
+onChange={handleChange}
+autoComplete="email"
+required
+/>
 
-          <div className="
-            w-20
-            h-20
-            rounded-2xl
-            bg-gradient-to-br
-            from-purple-600
-            to-blue-600
-            flex
-            items-center
-            justify-center
-            shadow-lg
-          ">
 
-            <Wallet
-              size={42}
-              className="text-white"
-            />
 
-          </div>
+<PasswordInput
+label="Password"
+name="password"
+placeholder="Create Password"
+value={formData.password}
+onChange={handleChange}
+autoComplete="new-password"
+icon={Lock}
+required
+/>
 
-        </div>
 
 
+<PasswordInput
+label="Confirm Password"
+name="confirmPassword"
+placeholder="Confirm Password"
+value={formData.confirmPassword}
+onChange={handleChange}
+autoComplete="new-password"
+icon={Lock}
+required
+/>
 
-        <h1 className="
-          text-center
-          text-3xl
-          font-bold
-          text-slate-900
-          dark:text-white
-        ">
 
-          AK's
-          <br/>
-          Expense Tracker V1
 
-        </h1>
+<button
 
+type="submit"
 
-        <p className="
-          text-center
-          mt-3
-          text-sm
-          text-gray-500
-          dark:text-slate-400
-        ">
+disabled={loading}
 
-          Create your account
-          and start managing your money.
+className="
+w-full
+py-3
+rounded-xl
+text-white
+font-semibold
+bg-gradient-to-r
+from-blue-600
+to-indigo-600
+hover:opacity-90
+transition
+disabled:opacity-50
+"
 
-        </p>
+>
 
+{
+loading
+?
+"Creating account..."
+:
+"Create Account"
+}
 
+</button>
 
 
-        <h2 className="
-          text-2xl
-          font-bold
-          mt-8
-          mb-5
-          text-blue-600
-          dark:text-blue-400
-        ">
 
-          Sign up
+</form>
 
-        </h2>
 
 
+<p
+className="
+text-center
+mt-6
+text-sm
+text-gray-500
+dark:text-slate-300
+"
+>
 
+Already have an account?
 
-        {error && (
 
-          <div className="
-            mb-4
-            p-3
-            rounded-xl
-            bg-red-100
-            text-red-600
-            dark:bg-red-900/30
-            dark:text-red-300
-            text-sm
-          ">
+<Link
+to="/login"
+className="
+ml-2
+text-blue-600
+font-semibold
+hover:underline
+"
+>
+Log in
+</Link>
 
-            {error}
 
-          </div>
+</p>
 
-        )}
 
 
+</AuthLayout>
 
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
-
-
-
-          {/* NAME */}
-
-          <div className="grid grid-cols-2 gap-3">
-
-
-            <div className="relative">
-
-              <User
-                size={20}
-                className="
-                  absolute
-                  left-4
-                  top-3.5
-                  text-gray-400
-                "
-              />
-
-
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleChange}
-
-                className="
-                  w-full
-                  pl-12
-                  py-3
-                  rounded-xl
-                  border
-                  dark:border-slate-600
-                  dark:bg-slate-700
-                  dark:text-white
-                  focus:ring-2
-                  focus:ring-blue-500
-                  outline-none
-                "
-                required
-              />
-
-            </div>
-
-
-
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={handleChange}
-
-              className="
-                w-full
-                px-4
-                py-3
-                rounded-xl
-                border
-                dark:border-slate-600
-                dark:bg-slate-700
-                dark:text-white
-                focus:ring-2
-                focus:ring-blue-500
-                outline-none
-              "
-
-              required
-
-            />
-
-
-          </div>
-
-
-
-
-
-          {/* EMAIL */}
-
-          <div className="relative">
-
-
-            <Mail
-              size={20}
-              className="
-                absolute
-                left-4
-                top-3.5
-                text-gray-400
-              "
-            />
-
-
-            <input
-
-              type="email"
-
-              name="email"
-
-              placeholder="Email"
-
-              value={formData.email}
-
-              onChange={handleChange}
-
-
-              className="
-                w-full
-                pl-12
-                py-3
-                rounded-xl
-                border
-                dark:border-slate-600
-                dark:bg-slate-700
-                dark:text-white
-                focus:ring-2
-                focus:ring-blue-500
-                outline-none
-              "
-
-              required
-
-            />
-
-
-          </div>
-
-
-
-
-
-
-          {/* PASSWORD */}
-
-          <div className="relative">
-
-            <Lock
-              size={20}
-              className="
-                absolute
-                left-4
-                top-3.5
-                text-gray-400
-              "
-            />
-
-
-            <input
-
-              type={
-                showPassword
-                ? "text"
-                : "password"
-              }
-
-              name="password"
-
-              placeholder="Password"
-
-              value={formData.password}
-
-              onChange={handleChange}
-
-
-              className="
-                w-full
-                pl-12
-                pr-12
-                py-3
-                rounded-xl
-                border
-                dark:border-slate-600
-                dark:bg-slate-700
-                dark:text-white
-                focus:ring-2
-                focus:ring-blue-500
-                outline-none
-              "
-
-              required
-
-            />
-
-
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowPassword(!showPassword)
-              }
-
-              className="
-                absolute
-                right-4
-                top-3.5
-                text-gray-400
-              "
-            >
-
-              {
-                showPassword
-                ?
-                <EyeOff size={20}/>
-                :
-                <Eye size={20}/>
-              }
-
-            </button>
-
-
-          </div>
-
-
-
-
-
-
-          {/* CONFIRM PASSWORD */}
-
-          <div className="relative">
-
-
-            <Lock
-              size={20}
-              className="
-                absolute
-                left-4
-                top-3.5
-                text-gray-400
-              "
-            />
-
-
-
-            <input
-
-              type={
-                showConfirmPassword
-                ?
-                "text"
-                :
-                "password"
-              }
-
-              name="confirmPassword"
-
-              placeholder="Confirm Password"
-
-              value={formData.confirmPassword}
-
-              onChange={handleChange}
-
-
-              className="
-                w-full
-                pl-12
-                pr-12
-                py-3
-                rounded-xl
-                border
-                dark:border-slate-600
-                dark:bg-slate-700
-                dark:text-white
-                focus:ring-2
-                focus:ring-blue-500
-                outline-none
-              "
-
-              required
-
-            />
-
-
-
-            <button
-
-              type="button"
-
-              onClick={() =>
-                setShowConfirmPassword(
-                  !showConfirmPassword
-                )
-              }
-
-
-              className="
-                absolute
-                right-4
-                top-3.5
-                text-gray-400
-              "
-
-            >
-
-              {
-                showConfirmPassword
-                ?
-                <EyeOff size={20}/>
-                :
-                 <Eye size={20}/>
-              }
-
-
-
-            </button>
-
-
-          </div>
-
-
-
-
-
-
-          <button
-
-            type="submit"
-
-            disabled={loading}
-
-
-            className="
-              w-full
-              py-3
-              rounded-xl
-              text-white
-              font-semibold
-              bg-gradient-to-r
-              from-purple-600
-              to-blue-600
-              hover:opacity-90
-              transition
-              disabled:opacity-50
-            "
-
-          >
-
-            {
-              loading
-              ?
-              "Creating account..."
-              :
-              "Create Account"
-            }
-
-
-          </button>
-
-
-
-
-        </form>
-
-
-
-
-
-        <p className="
-          text-center
-          mt-6
-          text-sm
-          text-gray-500
-          dark:text-slate-300
-        ">
-
-
-          Already have an account?
-
-
-          <Link
-
-            to="/login"
-
-            className="
-              ml-2
-              text-blue-600
-              font-semibold
-              hover:underline
-            "
-
-          >
-
-            Log in
-
-          </Link>
-
-
-        </p>
-
-
-
-      </div>
-
-
-    </div>
 
   );
 

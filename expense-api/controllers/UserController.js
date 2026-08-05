@@ -1,5 +1,11 @@
+
+
+
+
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+
 
 const generateToken = require("../utils/generateToken");
 
@@ -19,7 +25,7 @@ const registerUser = async (req, res, next) => {
   res.status(400);
   throw new Error("Password must be at least 6 characters");
     }
-    
+
     if (existingUser) {
       res.status(400);
       throw new Error("Email already exists");
@@ -93,11 +99,86 @@ const loginUser = async (req, res, next) => {
 };
 
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
 
+    if (!email) {
+      res.status(400);
+      throw new Error("Email is required");
+    }
 
+    const user = await User.findOne({ email });
 
+    if (!user) {
+      res.status(404);
+      throw new Error("Email not found");
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    user.resetToken = resetToken;
+    user.resetTokenExpire = Date.now() + 1000 * 60 * 15; // 15 mins
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Reset token generated",
+      resetToken,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      res.status(400);
+      throw new Error("Token and password are required");
+    }
+
+    if (password.length < 6) {
+      res.status(400);
+      throw new Error("Password must be at least 6 characters");
+    }
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      res.status(400);
+      throw new Error("Invalid or expired reset token");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
-  registerUser,
+    registerUser,
   loginUser,
+  forgotPassword,
+  resetPassword,
 };
