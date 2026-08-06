@@ -3,7 +3,7 @@ function Select({
   value,
   onChange,
   children,
-  className = ""
+  className = "",
 }) {
   return (
     <select
@@ -11,7 +11,9 @@ function Select({
       value={value}
       onChange={onChange}
       className={`
+        block
         w-full
+        min-w-0
         rounded-xl
         border
         border-gray-300
@@ -19,8 +21,8 @@ function Select({
         bg-white
         dark:bg-slate-800
         py-3
-        pl-10
-        pr-4
+        pl-12
+        pr-10
         text-gray-700
         dark:text-white
         shadow-sm
