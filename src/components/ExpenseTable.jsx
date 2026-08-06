@@ -304,7 +304,7 @@ focus:ring-blue-500
               ) : (
                 currentExpenses.map((expense) => (
                   <tr
-                    key={expense.id}
+                    key={expense._id}
                     className="
 border-b
 border-gray-200

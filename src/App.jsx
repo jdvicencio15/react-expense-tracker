@@ -25,6 +25,24 @@ import { getBudget } from "./api/budgetApi";
 import { useAuth } from "./context/AuthContext";
 
 
+function HomeRedirect() {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  return (
+    <Navigate
+      to={isAuthenticated ? "/dashboard" : "/login"}
+      replace
+    />
+  );
+}
 
 
 function DashboardPage() {
@@ -133,9 +151,9 @@ function App() {
 
       {/* ROOT REDIRECT */}
       <Route
-        path="/"
-        element={<Navigate to="/login" replace />}
-      />
+  path="/"
+  element={<HomeRedirect />}
+/>
 
       {/* PUBLIC ROUTES */}
 

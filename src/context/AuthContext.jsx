@@ -29,6 +29,7 @@ useEffect(() => {
     sessionStorage.getItem("token");
 
 
+
   if (savedUser && savedToken) {
     setUser(JSON.parse(savedUser));
     setToken(savedToken);
@@ -38,6 +39,8 @@ useEffect(() => {
   setLoading(false);
 
 }, []);
+
+
 
   // Register
  async function register(userData) {
@@ -49,19 +52,26 @@ useEffect(() => {
 }
 
   // Login
-  async function login(userData) {
+async function login(userData) {
 
   const response = await apiLogin(userData);
 
   setUser(response.data);
   setToken(response.token);
 
-
   const storage = userData.rememberMe
     ? localStorage
     : sessionStorage;
 
+  const otherStorage = userData.rememberMe
+    ? sessionStorage
+    : localStorage;
 
+  // Linisin ang kabilang storage
+  otherStorage.removeItem("user");
+  otherStorage.removeItem("token");
+
+  // Save sa tamang storage
   storage.setItem(
     "user",
     JSON.stringify(response.data)
@@ -71,7 +81,6 @@ useEffect(() => {
     "token",
     response.token
   );
-
 
   return response;
 }

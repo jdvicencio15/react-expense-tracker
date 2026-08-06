@@ -14,7 +14,10 @@ const Input = forwardRef(
         value={value}
         onChange={onChange}
         className={`
+          block
           w-full
+          max-w-full
+          min-w-0
           rounded-xl
           border
           border-gray-300

@@ -319,6 +319,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
               type="date"
               value={expenseDate}
               onChange={(e) => setExpenseDate(e.target.value)}
+              className="w-full max-w-full"
             />
           </div>
         </div>
