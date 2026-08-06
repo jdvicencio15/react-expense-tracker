@@ -14,6 +14,7 @@ function Select({
         block
         w-full
         min-w-0
+        appearance-none
         rounded-xl
         border
         border-gray-300

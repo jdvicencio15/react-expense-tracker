@@ -229,7 +229,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
           </div>
         </div>
 
-       <div className="space-y-2">
+       <div>
 
           <label
             htmlFor="expense-category"
@@ -265,7 +265,7 @@ function ExpenseForm({ editingExpense, setEditingExpense }) {
           </div>
         </div>
 
-       <div className="space-y-2">
+       <div>
           <label
             htmlFor="expense-paymentmethod"
             className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200"
